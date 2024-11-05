@@ -16,6 +16,8 @@ class ToDoListCell: UITableViewCell {
         let view = UIView()
         view.layer.cornerRadius = 10
         view.backgroundColor = UIColor(hex: "#DBDBDB")
+        view.layer.borderWidth = 0.5
+        view.layer.borderColor = UIColor(hex: "#DBDBDB").cgColor
         return view
     }()
     

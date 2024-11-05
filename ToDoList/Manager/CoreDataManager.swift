@@ -40,7 +40,6 @@ class CoreDataManager {
         newItem.dueDate = dueDate
         newItem.isCompleted = false
         newItem.index = Int32(fetchAllItems().count)
-
         newItem.color = NSKeyedArchiver.archivedData(withRootObject: color)
         
         do {

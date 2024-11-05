@@ -8,7 +8,7 @@
 import UIKit
 
 extension UIColor {
-    // Hex string ile UIColor oluşturma
+ 
     convenience init(hex: String) {
         var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
         hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
@@ -23,7 +23,7 @@ extension UIColor {
         self.init(red: red, green: green, blue: blue, alpha: 1.0)
     }
     
-    // Hex integer ile UIColor oluşturma
+    
     convenience init(hex: Int) {
         let red = CGFloat((hex >> 16) & 0xFF) / 255.0
         let green = CGFloat((hex >> 8) & 0xFF) / 255.0
@@ -31,7 +31,7 @@ extension UIColor {
         self.init(red: red, green: green, blue: blue, alpha: 1.0)
     }
     
-    // UIColor'ı hex string'e çevirme
+   
     func toHexString() -> String {
         let components = self.cgColor.components
         let r = components?[0] ?? 0

@@ -8,16 +8,18 @@
 import UIKit
 import SnapKit
 
-class TaskVC: UIViewController {
-    
+class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, CreateTaskViewControllerDelegate {
+
     let backButton = UIButton()
     let titleLabel = UILabel()
     let plusButton = UIButton()
     let taskImageView = UIImageView()
     let taskEmptyLabel = UILabel()
     lazy var overlayImageView = UIImageView()
+    let tableView = UITableView()
 
     var taskTitle: String?
+    var tasks: [ToDoListitem] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,8 +29,8 @@ class TaskVC: UIViewController {
         if let taskTitle = taskTitle {
             titleLabel.text = taskTitle
         }
-
-        showOverlayIfNeeded()
+        
+        loadTasks()
     }
 
     func setupUI() {
@@ -65,6 +67,18 @@ class TaskVC: UIViewController {
             make.width.height.equalTo(50)
         }
         
+        // UITableView ayarları
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(ToDoListCell.self, forCellReuseIdentifier: "ToDoListCell")
+        tableView.isHidden = tasks.isEmpty
+        
+        view.addSubview(tableView)
+        tableView.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(16)
+            make.left.right.bottom.equalToSuperview()
+        }
+
         taskImageView.image = UIImage(named: "note")
         taskImageView.contentMode = .scaleAspectFit
         taskImageView.alpha = 0.4
@@ -88,32 +102,65 @@ class TaskVC: UIViewController {
             make.top.equalTo(taskImageView.snp.bottom).offset(16)
             make.centerX.equalToSuperview()
         }
+
+        updateEmptyState()
     }
-    
-    func showOverlayIfNeeded() {
-        let isFirstLaunch = !UserDefaults.standard.bool(forKey: "hasLaunchedBefore")
-        
-        if isFirstLaunch {
-            
-            overlayImageView.image = UIImage(named: "tip1")
-            overlayImageView.contentMode = .scaleAspectFill
-//            overlayImageView.alpha = 0.7
-            overlayImageView.isUserInteractionEnabled = true
-            overlayImageView.frame = view.bounds
-            
-            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(didTapOverlay))
-            overlayImageView.addGestureRecognizer(tapGesture)
-            
-            view.addSubview(overlayImageView)
-            
-           
-            UserDefaults.standard.set(true, forKey: "hasLaunchedBefore")
-            UserDefaults.standard.synchronize()
+
+    func loadTasks() {
+        tasks = CoreDataManager.shared.fetchAllItems()
+        tableView.isHidden = tasks.isEmpty
+        updateEmptyState()
+        tableView.reloadData()
+    }
+
+    func updateEmptyState() {
+        let isTaskListEmpty = tasks.isEmpty
+        taskImageView.isHidden = !isTaskListEmpty
+        taskEmptyLabel.isHidden = !isTaskListEmpty
+    }
+
+    func didCreateTask(title: String, dueDate: String) {
+        // Yeni görevi CoreData'ya kaydet
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        if let dueDateObject = formatter.date(from: dueDate) {
+            if let _ = CoreDataManager.shared.createItem(name: title, dueDate: dueDateObject, color: UIColor.systemBlue) {
+                print("New task added to CoreData")
+                loadTasks()
+            } else {
+                print("Failed to add task to CoreData")
+            }
         }
     }
+
+    // MARK: - UITableView DataSource & Delegate Methods
     
-    @objc private func didTapOverlay() {
-        overlayImageView.removeFromSuperview()
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return tasks.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoListCell", for: indexPath) as? ToDoListCell else {
+            return UITableViewCell()
+        }
+        
+        let task = tasks[indexPath.row]
+        cell.configureCell(title: task.name ?? "", isChecked: task.isCompleted)
+        
+        cell.checkBoxTapped = { [weak self] in
+            guard let self = self else { return }
+            task.isCompleted.toggle()
+            if CoreDataManager.shared.saveContext() {
+                tableView.reloadRows(at: [indexPath], with: .automatic)
+            }
+        }
+        
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 
     @objc private func didTapBackButton() {
@@ -121,7 +168,14 @@ class TaskVC: UIViewController {
     }
     
     @objc private func didTapPlusButton() {
-        
+        let createTaskVC = CreateTaskViewController()
+        createTaskVC.delegate = self
+        if let sheet = createTaskVC.sheetPresentationController {
+            sheet.detents = [.medium()]
+            sheet.prefersGrabberVisible = true
+        }
+        createTaskVC.modalPresentationStyle = .pageSheet
+        present(createTaskVC, animated: true, completion: nil)
     }
 
     func configureNavigationBar() {
@@ -129,3 +183,4 @@ class TaskVC: UIViewController {
         navigationItem.hidesBackButton = true
     }
 }
+

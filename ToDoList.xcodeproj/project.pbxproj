@@ -21,6 +21,7 @@
 		38593AC42CBD38DC0048B95C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38593AC32CBD38DC0048B95C /* AppDelegate.swift */; };
 		38593ACE2CBD38DC0048B95C /* ToDoList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 38593ACC2CBD38DC0048B95C /* ToDoList.xcdatamodeld */; };
 		38593AD02CBD38DE0048B95C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38593ACF2CBD38DE0048B95C /* Assets.xcassets */; };
+		387A8A4A2CD90672001063D2 /* CreateTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387A8A492CD90672001063D2 /* CreateTaskViewController.swift */; };
 		388A3E312CBE519A008348AA /* ToDoListitem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388A3E2F2CBE519A008348AA /* ToDoListitem+CoreDataClass.swift */; };
 		38C9D6B62CCB78570046D2E2 /* BriefVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9D6B52CCB78570046D2E2 /* BriefVC.swift */; };
 		38EFE9BE2CBE998300F6BED8 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38EFE9BD2CBE998300F6BED8 /* SnapKit */; };
@@ -52,6 +53,7 @@
 		38593ACD2CBD38DC0048B95C /* ToDoList.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ToDoList.xcdatamodel; sourceTree = "<group>"; };
 		38593ACF2CBD38DE0048B95C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		38593AD42CBD38DE0048B95C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		387A8A492CD90672001063D2 /* CreateTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTaskViewController.swift; sourceTree = "<group>"; };
 		388A3E2F2CBE519A008348AA /* ToDoListitem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ToDoListitem+CoreDataClass.swift"; path = "../../ToDoListitem+CoreDataClass.swift"; sourceTree = "<group>"; };
 		38C9D6B52CCB78570046D2E2 /* BriefVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BriefVC.swift; sourceTree = "<group>"; };
 		38EFE9BF2CBF9BF800F6BED8 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
@@ -92,6 +94,7 @@
 				38EFE9C22CBF9CA500F6BED8 /* HomeVC.swift */,
 				38140B962CD4D9E60052B242 /* CreateVC.swift */,
 				38140BA82CD813FC0052B242 /* TaskVC.swift */,
+				387A8A492CD90672001063D2 /* CreateTaskViewController.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -309,6 +312,7 @@
 				38140B8F2CD4C3090052B242 /* CustomButton.swift in Sources */,
 				38140BA52CD80EF40052B242 /* OrangeButtons.swift in Sources */,
 				38140B992CD4E0960052B242 /* HeaderView.swift in Sources */,
+				387A8A4A2CD90672001063D2 /* CreateTaskViewController.swift in Sources */,
 				38140B872CCB8B710052B242 /* APIManager.swift in Sources */,
 				38593ACE2CBD38DC0048B95C /* ToDoList.xcdatamodeld in Sources */,
 				38140B912CD4D28E0052B242 /* CalenderVC.swift in Sources */,

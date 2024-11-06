@@ -17,14 +17,13 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
     let taskEmptyLabel = UILabel()
     lazy var overlayImageView = UIImageView()
     let tableView = UITableView()
-    
     var category: Kategori?
     var taskTitle: String?
     var tasks: [ToDoListitem] = []
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        loadTasks() 
+        loadTasks()
     }
     
     override func viewDidLoad() {
@@ -37,15 +36,17 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         }
         
         loadTasks()
+        
+        showOverlayIfFirstLaunch()
     }
 
     func setupUI() {
         view.backgroundColor = UIColor(hex: "F9F9F9")
         
+    
         backButton.setImage(UIImage(named: "back2"), for: .normal)
         backButton.tintColor = UIColor(hex: "#484848")
         backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
-        
         view.addSubview(backButton)
         backButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(-8)
@@ -53,19 +54,19 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
             make.width.height.equalTo(50)
         }
         
+    
         titleLabel.textColor = UIColor(hex: "#484848")
         titleLabel.font = UIFont.systemFont(ofSize: 22, weight: .medium)
         titleLabel.textAlignment = .center
-        
         view.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
             make.centerY.equalTo(backButton)
             make.centerX.equalToSuperview()
         }
         
+        
         plusButton.setImage(UIImage(named: "plus"), for: .normal)
         plusButton.addTarget(self, action: #selector(didTapPlusButton), for: .touchUpInside)
-        
         view.addSubview(plusButton)
         plusButton.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).inset(-8)
@@ -73,24 +74,24 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
             make.width.height.equalTo(50)
         }
         
+      
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .none
         tableView.backgroundColor = .clear
         tableView.register(ToDoListCell.self, forCellReuseIdentifier: "ToDoListCell")
         tableView.isHidden = tasks.isEmpty
-        
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(16)
             make.left.right.bottom.equalToSuperview()
         }
 
+    
         taskImageView.image = UIImage(named: "note")
         taskImageView.contentMode = .scaleAspectFit
         taskImageView.alpha = 0.4
         view.addSubview(taskImageView)
-
         taskImageView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).multipliedBy(0.4)
             make.centerX.equalToSuperview()
@@ -104,7 +105,6 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         taskEmptyLabel.font = UIFont.systemFont(ofSize: 14, weight: .regular)
         taskEmptyLabel.alpha = 0.5
         view.addSubview(taskEmptyLabel)
-
         taskEmptyLabel.snp.makeConstraints { make in
             make.top.equalTo(taskImageView.snp.bottom).offset(16)
             make.centerX.equalToSuperview()
@@ -131,21 +131,49 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
     }
 
     func didCreateTask(title: String, dueDate: String, category: Kategori) {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .medium
-            formatter.timeStyle = .none
+        loadTasks()
+    }
 
-            if let dueDateObject = formatter.date(from: dueDate) {
-                if let newTask = CoreDataManager.shared.createItem(name: title, dueDate: dueDateObject, color: UIColor.systemBlue, category: category) {
-                    print("New task added to CoreData: \(newTask)")
-                    loadTasks()
-                } else {
-                    print("Failed to add task to CoreData")
-                }
-            } else {
-                print("Failed to create task: invalid due date")
+    // MARK: - İlk Açılış Kontrolü ve Overlay Gösterimi
+    
+    func showOverlayIfFirstLaunch() {
+        let isFirstLaunch = UserDefaults.standard.bool(forKey: "isFirstLaunch")
+        
+        if !isFirstLaunch {
+            
+            UserDefaults.standard.set(true, forKey: "isFirstLaunch")
+            
+           
+            overlayImageView.image = UIImage(named: "tip1")
+            overlayImageView.contentMode = .scaleAspectFill
+            overlayImageView.alpha = 0.0
+            overlayImageView.isUserInteractionEnabled = true
+            view.addSubview(overlayImageView)
+            overlayImageView.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
             }
+            
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+                UIView.animate(withDuration: 0.5) {
+                    self?.overlayImageView.alpha = 1.0
+                }
+            }
+            
+         
+            let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissOverlay))
+            overlayImageView.addGestureRecognizer(tapGesture)
         }
+    }
+
+    @objc private func dismissOverlay() {
+        UIView.animate(withDuration: 0.5, animations: {
+            self.overlayImageView.alpha = 0.0
+        }) { _ in
+            self.overlayImageView.removeFromSuperview()
+        }
+    }
+
 
     // MARK: - UITableView DataSource & Delegate Methods
     
@@ -183,7 +211,7 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
     @objc private func didTapPlusButton() {
         let createTaskVC = CreateTaskViewController()
         createTaskVC.delegate = self
-        createTaskVC.category = self.category 
+        createTaskVC.category = self.category
 
         if let sheet = createTaskVC.sheetPresentationController {
             sheet.detents = [.medium()]

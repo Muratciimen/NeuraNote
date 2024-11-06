@@ -23,8 +23,8 @@ class ToDoListCell: UITableViewCell {
     
     let checkBoxButton: UIButton = {
         let button = UIButton()
-        let uncheckedImage = UIImage(named: "unfill")?.withRenderingMode(.alwaysOriginal)
-        let checkedImage = UIImage(named: "fill")?.withRenderingMode(.alwaysOriginal)
+        let uncheckedImage = UIImage(named: "uncheck")?.withRenderingMode(.alwaysOriginal)
+        let checkedImage = UIImage(named: "check")?.withRenderingMode(.alwaysOriginal)
         
         if uncheckedImage == nil {
             print("Unchecked image 'fill' not found!")
@@ -53,6 +53,7 @@ class ToDoListCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupCell()
+        self.backgroundColor = .clear
     }
     
     required init?(coder: NSCoder) {

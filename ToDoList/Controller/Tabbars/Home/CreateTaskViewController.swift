@@ -146,39 +146,39 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
     
     // MARK: - DatePicker Kurulumu
     private func setupDatePickerContainer() {
-        datePickerContainer.backgroundColor = .white
-        datePickerContainer.layer.cornerRadius = 16
-        datePickerContainer.layer.borderColor = UIColor.lightGray.cgColor
-        datePickerContainer.isHidden = true
-        view.addSubview(datePickerContainer)
+            datePickerContainer.backgroundColor = .white
+            datePickerContainer.layer.cornerRadius = 16
+            datePickerContainer.layer.borderColor = UIColor.lightGray.cgColor
+            datePickerContainer.isHidden = true
+            view.addSubview(datePickerContainer)
 
-        datePicker.datePickerMode = .date
-        datePicker.preferredDatePickerStyle = .wheels
-        datePicker.addTarget(self, action: #selector(datePickerValueChanged), for: .valueChanged)
-        datePickerContainer.addSubview(datePicker)
+            datePicker.datePickerMode = .date
+            datePicker.preferredDatePickerStyle = .wheels
+            datePickerContainer.addSubview(datePicker)
 
-        datePicker.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(16)
-            make.left.right.equalToSuperview().inset(16)
-            make.height.equalTo(200)
+            datePicker.snp.makeConstraints { make in
+                make.top.equalToSuperview().offset(16)
+                make.left.right.equalToSuperview().inset(16)
+                make.height.equalTo(200)
+            }
+
+            datePickerSelectButton = UIButton.createCustomButton(of: .selected, target: self, action: #selector(didSelectDate))
+            datePickerSelectButton.isEnabled = true
+            datePickerSelectButton.backgroundColor = UIColor(hex: "FFAF5F")
+            datePickerContainer.addSubview(datePickerSelectButton)
+
+            datePickerSelectButton.snp.makeConstraints { make in
+                make.top.equalTo(datePicker.snp.bottom).offset(24)
+                make.left.equalTo(24)
+                make.right.equalTo(-24)
+                make.height.equalTo(56)
+            }
+            
+            datePickerContainer.snp.makeConstraints { make in
+                make.left.right.bottom.equalToSuperview()
+                make.height.equalTo(400)
+            }
         }
-
-        datePickerSelectButton = UIButton.createCustomButton(of: .selected, target: self, action: #selector(didSelectDate))
-        datePickerSelectButton.isEnabled = false
-        datePickerContainer.addSubview(datePickerSelectButton)
-
-        datePickerSelectButton.snp.makeConstraints { make in
-            make.top.equalTo(datePicker.snp.bottom).offset(24)
-            make.left.equalTo(24)
-            make.right.equalTo(-24)
-            make.height.equalTo(56)
-        }
-        
-        datePickerContainer.snp.makeConstraints { make in
-            make.left.right.bottom.equalToSuperview()
-            make.height.equalTo(400)
-        }
-    }
     
     private func configureDatePicker() {
         datePicker.minimumDate = Date()
@@ -186,12 +186,6 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
 
     @objc private func didTapDueDateButton() {
         datePickerContainer.isHidden = false
-    }
-    
-    @objc private func datePickerValueChanged() {
-        datePickerSelectButton.isEnabled = true
-        datePickerSelectButton.backgroundColor = UIColor(hex: "FFAF5F")
-        checkIfSaveButtonShouldBeEnabled()
     }
     
     func textViewDidChange(_ textView: UITextView) {

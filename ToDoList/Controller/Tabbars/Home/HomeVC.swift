@@ -19,15 +19,21 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Crea
     let homeEmptyLabel = UILabel()
     let tableView = UITableView()
     
-    var taskList: [ToDoListitem] = []
-    var selectedColor: UIColor = UIColor.white 
+    var categoryList: [Kategori] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
-        fetchTasks()
+        fetchCategories()
+        
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadTableView), name: NSNotification.Name("TaskAdded"), object: nil)
     }
 
+    @objc func reloadTableView() {
+        fetchCategories()
+    }
+    
     func setupUI() {
         view.backgroundColor = UIColor(hex: "F9F9F9")
         
@@ -90,7 +96,7 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Crea
 
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.separatorStyle = .none 
+        tableView.separatorStyle = .none
         tableView.backgroundColor = .clear
         tableView.register(HomeCell.self, forCellReuseIdentifier: "HomeCell")
        
@@ -104,49 +110,36 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Crea
         homeEmptyLabel.isHidden = true
     }
 
-    func fetchTasks() {
-        taskList = coreDataManager.fetchAllItems()
+    func fetchCategories() {
+        categoryList = coreDataManager.fetchAllCategories()
         tableView.reloadData()
         updateViewVisibility()
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return taskList.count
+        return categoryList.count
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 10 
-    }
-
-   
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return 10 
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "HomeCell", for: indexPath) as? HomeCell else {
             return UITableViewCell()
         }
-        let taskItem = taskList[indexPath.row]
-        
-        
-        if let colorData = taskItem.color as? Data {
-            if let color = NSKeyedUnarchiver.unarchiveObject(with: colorData) as? UIColor {
-                cell.configure(title: taskItem.name ?? "Untitled", taskCount: 0, color: color)
-            } else {
-                cell.configure(title: taskItem.name ?? "Untitled", taskCount: 0, color: .white)
-            }
+
+        let category = categoryList[indexPath.row]
+
+        if let colorData = category.color,
+           let color = NSKeyedUnarchiver.unarchiveObject(with: colorData) as? UIColor {
+            cell.configure(title: category.name ?? "Untitled", taskCount: category.items?.count ?? 0, color: color)
         } else {
-            cell.configure(title: taskItem.name ?? "Untitled", taskCount: 0, color: .white)
+            cell.configure(title: category.name ?? "Untitled", taskCount: category.items?.count ?? 0, color: .white)
         }
-        
+
         return cell
     }
-
 
     @objc func didTapHomeCustomButton() {
         let newVC = CreateVC()
@@ -154,17 +147,14 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Crea
         navigationController?.pushViewController(newVC, animated: true)
     }
 
-    func didCreateTask(task: String, color: UIColor) {
-        let newTask = coreDataManager.createItem(name: task, dueDate: Date(), color: color)
-        if let newTask = newTask {
-            taskList.append(newTask)
-            tableView.reloadData()
-            updateViewVisibility()
-        }
+    func didCreateTask(task: String, color: UIColor, category: Kategori) {
+        categoryList.append(category)
+        tableView.reloadData()
+        updateViewVisibility()
     }
 
     private func updateViewVisibility() {
-        if taskList.isEmpty {
+        if categoryList.isEmpty {
             homeImageView.isHidden = false
             homeEmptyLabel.isHidden = false
             tableView.isHidden = true
@@ -176,22 +166,22 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Crea
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let taskItem = taskList[indexPath.row]
+        let category = categoryList[indexPath.row]
         let taskVC = TaskVC()
-        taskVC.taskTitle = taskItem.name 
+        taskVC.taskTitle = category.name
+        taskVC.category = category
         navigationController?.pushViewController(taskVC, animated: true)
     }
 
-    
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            let itemToDelete = taskList[indexPath.row]
-            coreDataManager.deleteItem(item: itemToDelete)
-            taskList.remove(at: indexPath.row)
+            let categoryToDelete = categoryList[indexPath.row]
+            coreDataManager.deleteCategory(category: categoryToDelete)
+            categoryList.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
             updateViewVisibility()
         }

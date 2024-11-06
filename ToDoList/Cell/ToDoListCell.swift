@@ -15,12 +15,11 @@ class ToDoListCell: UITableViewCell {
     private let containerView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 10
-        view.backgroundColor = UIColor(hex: "#DBDBDB")
+        view.backgroundColor = .clear
         view.layer.borderWidth = 0.5
         view.layer.borderColor = UIColor(hex: "#DBDBDB").cgColor
         return view
     }()
-    
     
     let checkBoxButton: UIButton = {
         let button = UIButton()
@@ -83,7 +82,6 @@ class ToDoListCell: UITableViewCell {
         }
     }
 
-    
     @objc func checkBoxTappedAction() {
         checkBoxButton.isSelected.toggle()
         checkBoxTapped?()

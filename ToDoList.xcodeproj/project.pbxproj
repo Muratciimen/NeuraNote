@@ -22,6 +22,8 @@
 		38593ACE2CBD38DC0048B95C /* ToDoList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 38593ACC2CBD38DC0048B95C /* ToDoList.xcdatamodeld */; };
 		38593AD02CBD38DE0048B95C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38593ACF2CBD38DE0048B95C /* Assets.xcassets */; };
 		387A8A4A2CD90672001063D2 /* CreateTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387A8A492CD90672001063D2 /* CreateTaskViewController.swift */; };
+		387A8A5B2CDA4D44001063D2 /* Kategori+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387A8A592CDA4D44001063D2 /* Kategori+CoreDataClass.swift */; };
+		387A8A5C2CDA4D44001063D2 /* Kategori+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387A8A5A2CDA4D44001063D2 /* Kategori+CoreDataProperties.swift */; };
 		388A3E312CBE519A008348AA /* ToDoListitem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388A3E2F2CBE519A008348AA /* ToDoListitem+CoreDataClass.swift */; };
 		38C9D6B62CCB78570046D2E2 /* BriefVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C9D6B52CCB78570046D2E2 /* BriefVC.swift */; };
 		38EFE9BE2CBE998300F6BED8 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38EFE9BD2CBE998300F6BED8 /* SnapKit */; };
@@ -54,6 +56,8 @@
 		38593ACF2CBD38DE0048B95C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		38593AD42CBD38DE0048B95C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		387A8A492CD90672001063D2 /* CreateTaskViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateTaskViewController.swift; sourceTree = "<group>"; };
+		387A8A592CDA4D44001063D2 /* Kategori+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Kategori+CoreDataClass.swift"; sourceTree = "<group>"; };
+		387A8A5A2CDA4D44001063D2 /* Kategori+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Kategori+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		388A3E2F2CBE519A008348AA /* ToDoListitem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ToDoListitem+CoreDataClass.swift"; path = "../../ToDoListitem+CoreDataClass.swift"; sourceTree = "<group>"; };
 		38C9D6B52CCB78570046D2E2 /* BriefVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BriefVC.swift; sourceTree = "<group>"; };
 		38EFE9BF2CBF9BF800F6BED8 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
@@ -159,6 +163,8 @@
 		388A3E2E2CBE50D7008348AA /* ToDoListitem */ = {
 			isa = PBXGroup;
 			children = (
+				387A8A592CDA4D44001063D2 /* Kategori+CoreDataClass.swift */,
+				387A8A5A2CDA4D44001063D2 /* Kategori+CoreDataProperties.swift */,
 				38EFE9DB2CC0FF6C00F6BED8 /* ToDoListitem+CoreDataProperties.swift */,
 				388A3E2F2CBE519A008348AA /* ToDoListitem+CoreDataClass.swift */,
 			);
@@ -302,6 +308,8 @@
 				38EFE9D92CC0FD0800F6BED8 /* TextVC.swift in Sources */,
 				38593AC42CBD38DC0048B95C /* AppDelegate.swift in Sources */,
 				38EFE9CB2CBFAA0100F6BED8 /* Extension+hex.swift in Sources */,
+				387A8A5B2CDA4D44001063D2 /* Kategori+CoreDataClass.swift in Sources */,
+				387A8A5C2CDA4D44001063D2 /* Kategori+CoreDataProperties.swift in Sources */,
 				388A3E312CBE519A008348AA /* ToDoListitem+CoreDataClass.swift in Sources */,
 				38140B972CD4D9E60052B242 /* CreateVC.swift in Sources */,
 				38140B9D2CD4F8680052B242 /* ColorPickerCollectionView.swift in Sources */,

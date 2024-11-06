@@ -23,7 +23,7 @@ extension ToDoListitem {
     @NSManaged public var index: Int32
     @NSManaged public var isCompleted: Bool
     @NSManaged public var name: String?
-    @NSManaged public var category: String?
+    @NSManaged public var category: Kategori?
 
 }
 

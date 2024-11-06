@@ -17,10 +17,16 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
     let taskEmptyLabel = UILabel()
     lazy var overlayImageView = UIImageView()
     let tableView = UITableView()
-
+    
+    var category: Kategori?
     var taskTitle: String?
     var tasks: [ToDoListitem] = []
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        loadTasks() 
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         configureNavigationBar()
@@ -67,9 +73,10 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
             make.width.height.equalTo(50)
         }
         
-        // UITableView ayarları
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.separatorStyle = .none
+        tableView.backgroundColor = .clear
         tableView.register(ToDoListCell.self, forCellReuseIdentifier: "ToDoListCell")
         tableView.isHidden = tasks.isEmpty
         
@@ -107,7 +114,11 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
     }
 
     func loadTasks() {
-        tasks = CoreDataManager.shared.fetchAllItems()
+        if let category = category {
+            tasks = CoreDataManager.shared.fetchItems(byCategory: category)
+        } else {
+            tasks = []
+        }
         tableView.isHidden = tasks.isEmpty
         updateEmptyState()
         tableView.reloadData()
@@ -119,20 +130,22 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         taskEmptyLabel.isHidden = !isTaskListEmpty
     }
 
-    func didCreateTask(title: String, dueDate: String) {
-        // Yeni görevi CoreData'ya kaydet
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
-        if let dueDateObject = formatter.date(from: dueDate) {
-            if let _ = CoreDataManager.shared.createItem(name: title, dueDate: dueDateObject, color: UIColor.systemBlue) {
-                print("New task added to CoreData")
-                loadTasks()
+    func didCreateTask(title: String, dueDate: String, category: Kategori) {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .medium
+            formatter.timeStyle = .none
+
+            if let dueDateObject = formatter.date(from: dueDate) {
+                if let newTask = CoreDataManager.shared.createItem(name: title, dueDate: dueDateObject, color: UIColor.systemBlue, category: category) {
+                    print("New task added to CoreData: \(newTask)")
+                    loadTasks()
+                } else {
+                    print("Failed to add task to CoreData")
+                }
             } else {
-                print("Failed to add task to CoreData")
+                print("Failed to create task: invalid due date")
             }
         }
-    }
 
     // MARK: - UITableView DataSource & Delegate Methods
     
@@ -170,6 +183,8 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
     @objc private func didTapPlusButton() {
         let createTaskVC = CreateTaskViewController()
         createTaskVC.delegate = self
+        createTaskVC.category = self.category 
+
         if let sheet = createTaskVC.sheetPresentationController {
             sheet.detents = [.medium()]
             sheet.prefersGrabberVisible = true

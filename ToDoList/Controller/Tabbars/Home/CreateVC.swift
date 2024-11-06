@@ -5,11 +5,12 @@
 //  Created by Murat Çimen on 1.11.2024.
 //
 
+
 import UIKit
 import SnapKit
 
 protocol CreateVCDelegate: AnyObject {
-    func didCreateTask(task: String, color: UIColor)
+    func didCreateTask(task: String, color: UIColor, category: Kategori)
 }
 
 class CreateVC: UIViewController, UITextFieldDelegate {
@@ -63,7 +64,7 @@ class CreateVC: UIViewController, UITextFieldDelegate {
         
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 50))
         textField.leftView = paddingView
-        textField.leftViewMode = .always;
+        textField.leftViewMode = .always
         
         view.addSubview(textField)
 
@@ -134,25 +135,38 @@ class CreateVC: UIViewController, UITextFieldDelegate {
 
     @objc private func createButtonTapped() {
         guard let listNameText = textField.text, !listNameText.isEmpty else {
+            showAlert(message: "Please enter a list name.")
             return
         }
 
         guard let selectedIndexPath = colorPickerView.selectedIndexPath else {
-            let defaultColor = UIColor.gray
-            delegate?.didCreateTask(task: listNameText, color: defaultColor)
-
-            let taskVC = TaskVC()
-            taskVC.taskTitle = listNameText
-            navigationController?.pushViewController(taskVC, animated: true)
+            showAlert(message: "Please select a color.")
             return
         }
 
         let selectedColor = colorPickerView.colors[selectedIndexPath.row]
-        delegate?.didCreateTask(task: listNameText, color: selectedColor)
 
-        let taskVC = TaskVC()
-        taskVC.taskTitle = listNameText 
-        navigationController?.pushViewController(taskVC, animated: true)
+        if let newCategory = CoreDataManager.shared.createCategory(name: listNameText, color: selectedColor) {
+           
+            delegate?.didCreateTask(task: listNameText, color: selectedColor, category: newCategory)
+
+            let taskVC = TaskVC()
+            taskVC.taskTitle = listNameText
+            taskVC.category = newCategory
+            navigationController?.pushViewController(taskVC, animated: true)
+        } else {
+            showAlert(message: "Failed to create category.")
+        }
+    }
+
+
+
+    private func showAlert(message: String, completion: (() -> Void)? = nil) {
+        let alert = UIAlertController(title: "Info", message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in
+            completion?()
+        }))
+        present(alert, animated: true, completion: nil)
     }
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
@@ -163,7 +177,6 @@ class CreateVC: UIViewController, UITextFieldDelegate {
         let updatedText = currentText.replacingCharacters(in: stringRange, with: string)
         return updatedText.count <= 17
     }
-
 
     func configureNavigationBar() {
         navigationItem.title = ""

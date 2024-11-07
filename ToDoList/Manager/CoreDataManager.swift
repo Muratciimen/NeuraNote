@@ -72,15 +72,14 @@ class CoreDataManager {
     
     // MARK: - Fetch Items by Category
     func fetchItems(byCategory category: Kategori) -> [ToDoListitem] {
-        let request = ToDoListitem.fetchRequest() as NSFetchRequest<ToDoListitem>
-        request.predicate = NSPredicate(format: "category == %@", category) // İlgili kategoriye göre filtreleme
-        let sortDescriptor = NSSortDescriptor(key: "createdAt", ascending: false)
-        request.sortDescriptors = [sortDescriptor]
+        let fetchRequest: NSFetchRequest<ToDoListitem> = ToDoListitem.fetchRequest()
+        fetchRequest.predicate = NSPredicate(format: "category == %@", category)
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "index", ascending: true)] // `index` değerine göre sırala
         
         do {
-            return try context.fetch(request)
+            return try context.fetch(fetchRequest)
         } catch {
-            print("Error fetching items for category: \(error)")
+            print("Error fetching tasks: \(error)")
             return []
         }
     }

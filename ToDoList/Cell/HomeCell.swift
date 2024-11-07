@@ -15,7 +15,7 @@ class HomeCell: UITableViewCell {
     let taskCountLabel = UILabel()
     let backgroundColorView = UIView()
     let iconImageView = UIImageView()
-    let button = UIButton()
+    let buttonImageView = UIImageView()
     let extraView = UIView()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -32,54 +32,57 @@ class HomeCell: UITableViewCell {
         containerView.layer.cornerRadius = 10
         containerView.clipsToBounds = true
         contentView.addSubview(containerView)
+        
         containerView.snp.makeConstraints { make in
             make.edges.equalToSuperview().inset(10)
         }
         
-        
         containerView.addSubview(backgroundColorView)
         backgroundColorView.layer.cornerRadius = 10
         backgroundColorView.clipsToBounds = true
+        
         backgroundColorView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
 
-        
         iconImageView.image = UIImage(named: "whiteIcon")?.withRenderingMode(.alwaysTemplate)
         iconImageView.contentMode = .scaleAspectFit
         backgroundColorView.addSubview(iconImageView)
+        
         iconImageView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(16)
             make.left.equalToSuperview().offset(16)
             make.width.height.equalTo(24)
         }
 
-        
         titleLabel.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         titleLabel.textColor = UIColor(hex: "#545454")
         backgroundColorView.addSubview(titleLabel)
+        
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(20)
             make.left.equalTo(iconImageView.snp.right).offset(16)
         }
         
-        button.setImage(UIImage(named: "right"), for: .normal)
-        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-        backgroundColorView.addSubview(button)
-        button.snp.makeConstraints { make in
+        buttonImageView.image = UIImage(named: "right")
+        buttonImageView.contentMode = .scaleAspectFit
+        buttonImageView.isUserInteractionEnabled = true
+        backgroundColorView.addSubview(buttonImageView)
+        
+        buttonImageView.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(16)
             make.right.equalToSuperview().offset(-16)
             make.width.height.equalTo(24)
-           
         }
         
         extraView.backgroundColor = UIColor(hex: "#FFFFFF")
         extraView.layer.cornerRadius = 6
         extraView.alpha = 0.6
         backgroundColorView.addSubview(extraView)
+        
         extraView.snp.makeConstraints { make in
-            make.right.equalTo(button.snp.left).offset(-11)
-            make.centerY.equalTo(button)
+            make.right.equalTo(buttonImageView.snp.left).offset(-11)
+            make.centerY.equalTo(buttonImageView)
             make.width.equalTo(70)
             make.height.equalTo(24)
              
@@ -121,8 +124,4 @@ class HomeCell: UITableViewCell {
         iconImageView.tintColor = iconColor(for: color)
     }
     
-    @objc private func buttonTapped() {
-        print("Button was tapped!")
-     
-    }
 }

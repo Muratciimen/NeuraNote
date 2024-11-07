@@ -11,6 +11,8 @@ import SnapKit
 class ToDoListCell: UITableViewCell {
     
     var checkBoxTapped: (() -> Void)?
+    var buttonTappedAction: (() -> Void)?
+    let button = UIButton()
 
     private let containerView: UIView = {
         let view = UIView()
@@ -35,8 +37,6 @@ class ToDoListCell: UITableViewCell {
         }
         button.setImage(uncheckedImage, for: .normal)
         button.setImage(checkedImage, for: .selected)
-
-        
         button.addTarget(self, action: #selector(checkBoxTappedAction), for: .touchUpInside)
         return button
     }()
@@ -64,6 +64,7 @@ class ToDoListCell: UITableViewCell {
         contentView.addSubview(containerView)
         containerView.addSubview(checkBoxButton)
         containerView.addSubview(titleLabel)
+        containerView.addSubview(button)
         
         containerView.snp.makeConstraints { make in
             make.edges.equalToSuperview().inset(10)
@@ -78,17 +79,26 @@ class ToDoListCell: UITableViewCell {
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)
             make.left.equalTo(checkBoxButton.snp.right).offset(16)
+            make.right.equalTo(button.snp.left).offset(-16)
+            make.bottom.equalToSuperview().offset(-10)
+        }
+        
+        button.setImage(UIImage(named: "right"), for: .normal)
+        button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
+        button.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
             make.right.equalToSuperview().offset(-16)
-            make.bottom.lessThanOrEqualToSuperview().offset(-10)
+            make.width.height.equalTo(24)
         }
     }
-
+    
     @objc func checkBoxTappedAction() {
         checkBoxButton.isSelected.toggle()
         checkBoxTapped?()
     }
     
     func configureCell(title: String, isChecked: Bool) {
+   
         let attributedString = NSMutableAttributedString(string: title)
         
         if isChecked {
@@ -99,5 +109,10 @@ class ToDoListCell: UITableViewCell {
         
         titleLabel.attributedText = attributedString
         checkBoxButton.isSelected = isChecked
+    }
+
+    
+    @objc private func buttonTapped() {
+        buttonTappedAction?()
     }
 }

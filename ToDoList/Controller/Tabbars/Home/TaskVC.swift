@@ -38,6 +38,9 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         loadTasks()
         
         showOverlayIfFirstLaunch()
+        
+        let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPressGesture(_:)))
+        tableView.addGestureRecognizer(longPressGesture)
     }
 
     func setupUI() {
@@ -115,7 +118,7 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
 
     func loadTasks() {
         if let category = category {
-            tasks = CoreDataManager.shared.fetchItems(byCategory: category)
+            tasks = CoreDataManager.shared.fetchItems(byCategory: category).sorted(by: { $0.index < $1.index })
         } else {
             tasks = []
         }
@@ -191,13 +194,42 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         
         cell.checkBoxTapped = { [weak self] in
             guard let self = self else { return }
+            
             task.isCompleted.toggle()
-            if CoreDataManager.shared.saveContext() {
-                tableView.reloadRows(at: [indexPath], with: .automatic)
+            
+            DispatchQueue.main.async {
+                if CoreDataManager.shared.saveContext() {
+                    tableView.reloadData()
+                }
             }
         }
         
+        cell.buttonTappedAction = { [weak self] in
+            guard let self = self else { return }
+            
+            let taskDetailVC = TaskDetail()
+            
+            taskDetailVC.taskTitle = task.name
+        
+            self.navigationController?.pushViewController(taskDetailVC, animated: true)
+        }
+        
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+    
+        let movedTask = tasks.remove(at: sourceIndexPath.row)
+        tasks.insert(movedTask, at: destinationIndexPath.row)
+        
+        for (index, task) in tasks.enumerated() {
+            task.index = Int32(index)
+        }
+        CoreDataManager.shared.saveContext()
+    }
+    
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return true
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -206,6 +238,11 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
 
     @objc private func didTapBackButton() {
         navigationController?.popToRootViewController(animated: true)
+    }
+    
+    @objc func handleLongPressGesture(_ gesture: UILongPressGestureRecognizer) {
+        guard gesture.state == .began else { return }
+        tableView.setEditing(!tableView.isEditing, animated: true)
     }
     
     @objc private func didTapPlusButton() {

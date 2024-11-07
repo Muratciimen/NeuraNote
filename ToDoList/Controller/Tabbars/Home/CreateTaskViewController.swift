@@ -5,6 +5,7 @@
 //  Created by Murat Çimen on 4.11.2024.
 //
 
+
 import UIKit
 import SnapKit
 
@@ -18,21 +19,30 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
     let dueDateLabel = UILabel()
     let dueDateIcon = UIImageView()
     let dueDateButton = UIButton()
+    let reminderLabel = UILabel()
+    let reminderIcon = UIImageView()
+    let reminderButton = UIButton()
     let descriptionLabel = UILabel()
     let descriptionIcon = UIImageView()
     let descriptionTextView = UITextView()
     var saveButton = UIButton()
     let datePickerContainer = UIView()
     let datePicker = UIDatePicker()
+    let reminderPickerContainer = UIView()
+    let reminderDatePicker = UIDatePicker()
     weak var delegate: CreateTaskViewControllerDelegate?
-    @objc var datePickerSelectButton = UIButton()
     var category: Kategori?
     private var isTaskSaved = false
     
+   
+    @objc var datePickerSelectButton = UIButton()
+    @objc var reminderPickerSelectButton = UIButton()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         setupDatePickerContainer()
+        setupReminderPickerContainer()
         configureDatePicker()
         descriptionTextView.delegate = self
         saveButton.isEnabled = false
@@ -100,11 +110,58 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
             make.height.width.equalTo(24)
         }
         
+        reminderIcon.image = UIImage(named: "Calendar")
+        view.addSubview(reminderIcon)
+        
+        reminderIcon.snp.makeConstraints { make in
+            make.top.equalTo(dueDateButton.snp.bottom).offset(20)
+            make.left.equalToSuperview().offset(28)
+            make.width.height.equalTo(20)
+        }
+        
+        reminderLabel.text = "Reminder at:"
+        reminderLabel.textColor = UIColor(hex: "4C4C4C")
+        reminderLabel.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        view.addSubview(reminderLabel)
+        
+        reminderLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(reminderIcon)
+            make.left.equalTo(reminderIcon.snp.right).offset(8)
+        }
+        
+        reminderButton.setTitle("Select Reminder", for: .normal)
+        reminderButton.setTitleColor(UIColor(hex: "797979"), for: .normal)
+        reminderButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .regular)
+        reminderButton.layer.cornerRadius = 12
+        reminderButton.layer.borderColor = UIColor(hex: "DADADA").cgColor
+        reminderButton.layer.borderWidth = 0.5
+        reminderButton.backgroundColor = UIColor(hex: "F6F6F6")
+        reminderButton.contentHorizontalAlignment = .left
+        reminderButton.addTarget(self, action: #selector(didTapReminderButton), for: .touchUpInside)
+        reminderButton.contentEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 0)
+        view.addSubview(reminderButton)
+        
+        reminderButton.snp.makeConstraints { make in
+            make.top.equalTo(reminderLabel.snp.bottom).offset(8)
+            make.left.right.equalToSuperview().inset(22)
+            make.height.equalTo(50)
+        }
+        
+        let reminderIconImageView = UIImageView(image: UIImage(named: "right"))
+        reminderIconImageView.contentMode = .scaleAspectFit
+        reminderButton.addSubview(reminderIconImageView)
+        
+        reminderIconImageView.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+            make.right.equalToSuperview().offset(-12)
+            make.height.width.equalTo(24)
+        }
+        
         descriptionIcon.image = UIImage(named: "PenNewSquare")
         view.addSubview(descriptionIcon)
         
         descriptionIcon.snp.makeConstraints { make in
-            make.top.equalTo(dueDateButton.snp.bottom).offset(20)
+            make.top.equalTo(reminderButton.snp.bottom).offset(20)
             make.left.equalToSuperview().offset(28)
             make.width.height.equalTo(20)
         }
@@ -137,7 +194,7 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
         view.addSubview(saveButton)
         
         saveButton.snp.makeConstraints { make in
-            make.top.equalTo(descriptionTextView.snp.bottom).offset(24)
+            make.top.equalTo(descriptionTextView.snp.bottom).offset(16)
             make.left.equalTo(24)
             make.right.equalTo(-24)
             make.height.equalTo(56)
@@ -146,40 +203,78 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
     
     // MARK: - DatePicker Kurulumu
     private func setupDatePickerContainer() {
-            datePickerContainer.backgroundColor = .white
-            datePickerContainer.layer.cornerRadius = 16
-            datePickerContainer.layer.borderColor = UIColor.lightGray.cgColor
-            datePickerContainer.isHidden = true
-            view.addSubview(datePickerContainer)
+        datePickerContainer.backgroundColor = .white
+        datePickerContainer.layer.cornerRadius = 16
+        datePickerContainer.layer.borderColor = UIColor.lightGray.cgColor
+        datePickerContainer.isHidden = true
+        view.addSubview(datePickerContainer)
 
-            datePicker.datePickerMode = .date
-            datePicker.preferredDatePickerStyle = .wheels
-            datePickerContainer.addSubview(datePicker)
+        datePicker.datePickerMode = .date
+        datePicker.preferredDatePickerStyle = .wheels
+        datePicker.minimumDate = Date()
+        datePicker.addTarget(self, action: #selector(datePickerChanged(_:)), for: .valueChanged)
+        datePickerContainer.addSubview(datePicker)
 
-            datePicker.snp.makeConstraints { make in
-                make.top.equalToSuperview().offset(16)
-                make.left.right.equalToSuperview().inset(16)
-                make.height.equalTo(200)
-            }
-
-            datePickerSelectButton = UIButton.createCustomButton(of: .selected, target: self, action: #selector(didSelectDate))
-            datePickerSelectButton.isEnabled = true
-            datePickerSelectButton.backgroundColor = UIColor(hex: "FFAF5F")
-            datePickerContainer.addSubview(datePickerSelectButton)
-
-            datePickerSelectButton.snp.makeConstraints { make in
-                make.top.equalTo(datePicker.snp.bottom).offset(24)
-                make.left.equalTo(24)
-                make.right.equalTo(-24)
-                make.height.equalTo(56)
-            }
-            
-            datePickerContainer.snp.makeConstraints { make in
-                make.left.right.bottom.equalToSuperview()
-                make.height.equalTo(400)
-            }
+        datePicker.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(16)
+            make.left.right.equalToSuperview().inset(16)
+            make.height.equalTo(300)
         }
+
+        datePickerSelectButton = UIButton.createCustomButton(of: .selected, target: self, action: #selector(didSelectDate))
+        datePickerSelectButton.backgroundColor = UIColor(hex: "FFAF5F")
+        datePickerContainer.addSubview(datePickerSelectButton)
+
+        datePickerSelectButton.snp.makeConstraints { make in
+            make.top.equalTo(datePicker.snp.bottom).offset(24)
+            make.left.equalTo(24)
+            make.right.equalTo(-24)
+            make.height.equalTo(56)
+        }
+
+        datePickerContainer.snp.makeConstraints { make in
+            make.top.equalTo(40)
+            make.left.right.bottom.equalToSuperview()
+            make.height.equalTo(400)
+        }
+    }
     
+    // MARK: - Reminder Picker Kurulumu
+    private func setupReminderPickerContainer() {
+        reminderPickerContainer.backgroundColor = .white
+        reminderPickerContainer.layer.cornerRadius = 16
+        reminderPickerContainer.layer.borderColor = UIColor.lightGray.cgColor
+        reminderPickerContainer.isHidden = true
+        view.addSubview(reminderPickerContainer)
+        
+        reminderDatePicker.datePickerMode = .time
+        reminderDatePicker.preferredDatePickerStyle = .wheels
+        reminderPickerContainer.addSubview(reminderDatePicker)
+        
+        reminderDatePicker.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(16)
+            make.left.right.equalToSuperview().inset(16)
+            make.height.equalTo(300)
+        }
+        
+        reminderPickerSelectButton = UIButton.createCustomButton(of: .selected, target: self, action: #selector(didSelectReminderTime))
+        reminderPickerSelectButton.backgroundColor = UIColor(hex: "FFAF5F")
+        reminderPickerContainer.addSubview(reminderPickerSelectButton)
+        
+        reminderPickerSelectButton.snp.makeConstraints { make in
+            make.top.equalTo(reminderDatePicker.snp.bottom).offset(24)
+            make.left.equalTo(24)
+            make.right.equalTo(-24)
+            make.height.equalTo(56)
+        }
+        
+        reminderPickerContainer.snp.makeConstraints { make in
+            make.top.equalTo(40)
+            make.left.right.bottom.equalToSuperview()
+            make.height.equalTo(400)
+        }
+    }
+
     private func configureDatePicker() {
         datePicker.minimumDate = Date()
     }
@@ -188,20 +283,25 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
         datePickerContainer.isHidden = false
     }
     
-    func textViewDidChange(_ textView: UITextView) {
-        checkIfSaveButtonShouldBeEnabled()
+    @objc private func didTapReminderButton() {
+        reminderPickerContainer.isHidden = false
     }
     
-    private func checkIfSaveButtonShouldBeEnabled() {
-        if let dueDateText = dueDateButton.titleLabel?.text, !dueDateText.contains("Select Date"),
-           !descriptionTextView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            saveButton.isEnabled = true
-            saveButton.backgroundColor = UIColor(hex: "FFAF5F")
+    @objc private func datePickerChanged(_ sender: UIDatePicker) {
+       
+        updateReminderMinimumTime(for: sender.date)
+    }
+
+    private func updateReminderMinimumTime(for selectedDate: Date) {
+        let calendar = Calendar.current
+        let currentDate = Date()
+        if calendar.isDate(selectedDate, inSameDayAs: currentDate) {
+            reminderDatePicker.minimumDate = currentDate
         } else {
-            saveButton.isEnabled = false
+            reminderDatePicker.minimumDate = nil
         }
     }
-    
+
     @objc private func didSelectDate() {
         let selectedDate = datePicker.date
         let formatter = DateFormatter()
@@ -219,57 +319,91 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
             ),
             for: .normal
         )
+    
+        updateReminderMinimumTime(for: selectedDate)
         
         datePickerContainer.isHidden = true
     }
     
+    @objc private func didSelectReminderTime() {
+        let selectedTime = reminderDatePicker.date
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        formatter.dateStyle = .none
+        let formattedTime = formatter.string(from: selectedTime)
+        
+        reminderButton.setAttributedTitle(
+            NSAttributedString(
+                string: "       \(formattedTime)",
+                attributes: [
+                    .font: UIFont.systemFont(ofSize: 16, weight: .regular),
+                    .foregroundColor: UIColor(hex: "797979")
+                ]
+            ),
+            for: .normal
+        )
+        
+        reminderPickerContainer.isHidden = true
+    }
+    
+    private func checkIfSaveButtonShouldBeEnabled() {
+        if let dueDateText = dueDateButton.titleLabel?.text, !dueDateText.contains("Select Date"),
+           let reminderText = reminderButton.titleLabel?.text, !reminderText.contains("Select Reminder"),
+           !descriptionTextView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            saveButton.isEnabled = true
+            saveButton.backgroundColor = UIColor(hex: "FFAF5F")
+        } else {
+            saveButton.isEnabled = false
+        }
+    }
+    
     // MARK: - Görev Kaydetme İşlemi
     @objc private func saveButtonTapped() {
-            guard !isTaskSaved else {
-                print("Task is already saved.")
-                return
-            }
-            
-            isTaskSaved = true
-            guard let taskDescription = descriptionTextView.text,
-                  !taskDescription.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-                print("Task description is empty.")
-                isTaskSaved = false
-                return
-            }
-
-            let dueDateString = dueDateButton.titleLabel?.text?.trimmingCharacters(in: .whitespacesAndNewlines)
-            guard let dueDateText = dueDateString, !dueDateText.contains("Select Date") else {
-                print("Due date not selected.")
-                isTaskSaved = false
-                return
-            }
-
-            let formatter = DateFormatter()
-            formatter.dateStyle = .medium
-            formatter.timeStyle = .none
-            guard let dueDate = formatter.date(from: dueDateText) else {
-                print("Invalid due date format.")
-                isTaskSaved = false
-                return
-            }
-
-            guard let category = category else {
-                print("Category is missing.")
-                isTaskSaved = false
-                return
-            }
-
-            if let _ = CoreDataManager.shared.createItem(name: taskDescription, dueDate: dueDate, color: UIColor.systemBlue, category: category) {
-                print("Task successfully saved to CoreData.")
-                
-                delegate?.didCreateTask(title: taskDescription, dueDate: dueDateText, category: category)
-                NotificationCenter.default.post(name: NSNotification.Name("TaskAdded"), object: nil)
-            } else {
-                print("Failed to save task to CoreData.")
-                isTaskSaved = false
-            }
-            
-            dismiss(animated: true, completion: nil)
+        guard !isTaskSaved else {
+            print("Task is already saved.")
+            return
         }
+        
+        isTaskSaved = true
+        guard let taskDescription = descriptionTextView.text,
+              !taskDescription.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+            print("Task description is empty.")
+            isTaskSaved = false
+            return
+        }
+
+        let dueDateString = dueDateButton.titleLabel?.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let dueDateText = dueDateString, !dueDateText.contains("Select Date") else {
+            print("Due date not selected.")
+            isTaskSaved = false
+            return
+        }
+
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .none
+        guard let dueDate = formatter.date(from: dueDateText) else {
+            print("Invalid due date format.")
+            isTaskSaved = false
+            return
+        }
+
+        guard let category = category else {
+            print("Category is missing.")
+            isTaskSaved = false
+            return
+        }
+
+        if let _ = CoreDataManager.shared.createItem(name: taskDescription, dueDate: dueDate, color: UIColor.systemBlue, category: category) {
+            print("Task successfully saved to CoreData.")
+            
+            delegate?.didCreateTask(title: taskDescription, dueDate: dueDateText, category: category)
+            NotificationCenter.default.post(name: NSNotification.Name("TaskAdded"), object: nil)
+        } else {
+            print("Failed to save task to CoreData.")
+            isTaskSaved = false
+        }
+        
+        dismiss(animated: true, completion: nil)
+    }
 }

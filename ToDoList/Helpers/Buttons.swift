@@ -20,8 +20,6 @@ class CustomButtonVC: UIViewController {
             button.setTitleColor(titleColor, for: .normal)
             button.titleLabel?.font = font
             button.contentHorizontalAlignment = .left
-            
-           
             button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
             button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 10)  
             return button

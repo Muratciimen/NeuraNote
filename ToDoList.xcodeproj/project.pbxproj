@@ -36,6 +36,7 @@
 		38EFE9D72CBFF4A800F6BED8 /* SplashVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EFE9D62CBFF4A800F6BED8 /* SplashVC.swift */; };
 		38EFE9D92CC0FD0800F6BED8 /* TextVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EFE9D82CC0FD0800F6BED8 /* TextVC.swift */; };
 		38EFE9DC2CC0FF6C00F6BED8 /* ToDoListitem+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EFE9DB2CC0FF6C00F6BED8 /* ToDoListitem+CoreDataProperties.swift */; };
+		38F759042CDCB16300851053 /* TaskDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F759032CDCB16300851053 /* TaskDetail.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -69,6 +70,7 @@
 		38EFE9D62CBFF4A800F6BED8 /* SplashVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashVC.swift; sourceTree = "<group>"; };
 		38EFE9D82CC0FD0800F6BED8 /* TextVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextVC.swift; sourceTree = "<group>"; };
 		38EFE9DB2CC0FF6C00F6BED8 /* ToDoListitem+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ToDoListitem+CoreDataProperties.swift"; path = "../../ToDoListitem+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		38F759032CDCB16300851053 /* TaskDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskDetail.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +101,7 @@
 				38140B962CD4D9E60052B242 /* CreateVC.swift */,
 				38140BA82CD813FC0052B242 /* TaskVC.swift */,
 				387A8A492CD90672001063D2 /* CreateTaskViewController.swift */,
+				38F759032CDCB16300851053 /* TaskDetail.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -311,6 +314,7 @@
 				387A8A5B2CDA4D44001063D2 /* Kategori+CoreDataClass.swift in Sources */,
 				387A8A5C2CDA4D44001063D2 /* Kategori+CoreDataProperties.swift in Sources */,
 				388A3E312CBE519A008348AA /* ToDoListitem+CoreDataClass.swift in Sources */,
+				38F759042CDCB16300851053 /* TaskDetail.swift in Sources */,
 				38140B972CD4D9E60052B242 /* CreateVC.swift in Sources */,
 				38140B9D2CD4F8680052B242 /* ColorPickerCollectionView.swift in Sources */,
 				38EFE9DC2CC0FF6C00F6BED8 /* ToDoListitem+CoreDataProperties.swift in Sources */,

@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import CoreData
 
-class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, CreateVCDelegate {
+class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, CreateVCDelegate, TaskVCDelegate {
 
     let coreDataManager = CoreDataManager.shared
     let homeTitleLabel = UILabel()
@@ -25,7 +25,6 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Crea
         super.viewDidLoad()
         setupUI()
         fetchCategories()
-        
         
         NotificationCenter.default.addObserver(self, selector: #selector(reloadTableView), name: NSNotification.Name("TaskAdded"), object: nil)
     }
@@ -170,6 +169,7 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Crea
         let taskVC = TaskVC()
         taskVC.taskTitle = category.name
         taskVC.category = category
+        taskVC.delegate = self // TaskVC'ye HomeVC'yi delegate olarak atıyoruz
         navigationController?.pushViewController(taskVC, animated: true)
     }
 
@@ -185,5 +185,10 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Crea
             tableView.deleteRows(at: [indexPath], with: .automatic)
             updateViewVisibility()
         }
+    }
+    
+    
+    func didUpdateTaskCount() {
+        fetchCategories()
     }
 }

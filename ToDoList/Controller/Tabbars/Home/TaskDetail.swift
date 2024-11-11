@@ -39,29 +39,29 @@ class TaskDetail: UIViewController {
         dateLabel.text = dueDate ?? "No Date Selected"
         reminderSecondLabel.text = reminderTime ?? "No Reminder Set"
         
-        fetchBrief() // Brief çekme işlemi
+        fetchBrief() 
     }
     
     func fetchBrief() {
-        // Görev başlığı yoksa işlemi durdur
+        
         guard let taskTitle = taskTitle else {
             briefLabel.text = "Görev başlığı bulunamadı."
             return
         }
         
-        // Daha önce kaydedilmiş bir brief var mı kontrol ediyoruz
+        
         if let savedBrief = UserDefaults.standard.string(forKey: taskTitle) {
-            briefLabel.text = savedBrief // Eğer kaydedilmiş brief varsa onu göster
+            briefLabel.text = savedBrief
             return
         }
         
-        // Eğer brief yoksa, API'den yeni brief çekiyoruz
+        
         apiManager.fetchGeminiContent(prompt: taskTitle) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let briefText):
                     self?.briefLabel.text = briefText
-                    UserDefaults.standard.set(briefText, forKey: taskTitle) // Brief'i UserDefaults'a kaydediyoruz
+                    UserDefaults.standard.set(briefText, forKey: taskTitle)
                 case .failure(let error):
                     self?.briefLabel.text = "Brief alınamadı: \(error.localizedDescription)"
                 }

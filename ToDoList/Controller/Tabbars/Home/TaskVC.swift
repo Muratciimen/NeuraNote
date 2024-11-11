@@ -4,12 +4,19 @@
 //
 //  Created by Murat Çimen on 3.11.2024.
 //
+//
 
 import UIKit
 import SnapKit
 
+
+protocol TaskVCDelegate: AnyObject {
+    func didUpdateTaskCount()
+}
+
 class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, CreateTaskViewControllerDelegate {
 
+    weak var delegate: TaskVCDelegate?
     let backButton = UIButton()
     let titleLabel = UILabel()
     let plusButton = UIButton()
@@ -36,7 +43,6 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         }
         
         loadTasks()
-        
         showOverlayIfFirstLaunch()
         
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPressGesture(_:)))
@@ -130,6 +136,7 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
 
     func didCreateTask(title: String, dueDate: String, category: Kategori) {
         loadTasks()
+        delegate?.didUpdateTaskCount()
     }
 
     // MARK: - İlk Açılış Kontrolü ve Overlay Gösterimi
@@ -179,6 +186,27 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         return tasks.count
     }
     
+        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            let task = tasks[indexPath.row]
+            let taskDetailVC = TaskDetail()
+            taskDetailVC.taskTitle = task.name
+            taskDetailVC.dueDate = task.dueDate != nil ? DateFormatter.localizedString(from: task.dueDate!, dateStyle: .medium, timeStyle: .none) : "No Date Selected"
+    
+            if let reminderTime = task.reminderTime {
+                let timeFormatter = DateFormatter()
+                timeFormatter.dateFormat = "HH:mm"
+                taskDetailVC.reminderTime = timeFormatter.string(from: reminderTime)
+            } else {
+                taskDetailVC.reminderTime = "No Reminder Set"
+            }
+    
+            
+            navigationController?.pushViewController(taskDetailVC, animated: true)
+    
+           
+            tableView.deselectRow(at: indexPath, animated: true)
+        }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoListCell", for: indexPath) as? ToDoListCell else {
             return UITableViewCell()
@@ -202,15 +230,13 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         cell.buttonTappedAction = { [weak self] in
             guard let self = self else { return }
             
-            // TaskDetail ekranını başlat ve verileri ata
             let taskDetailVC = TaskDetail()
             taskDetailVC.taskTitle = task.name
             taskDetailVC.dueDate = task.dueDate != nil ? DateFormatter.localizedString(from: task.dueDate!, dateStyle: .medium, timeStyle: .none) : "No Date Selected"
             
-            // reminderTime'ı String'e çevirme
             if let reminderTime = task.reminderTime {
                 let timeFormatter = DateFormatter()
-                timeFormatter.dateFormat = "HH:mm" // Saat formatı
+                timeFormatter.dateFormat = "HH:mm"
                 taskDetailVC.reminderTime = timeFormatter.string(from: reminderTime)
             } else {
                 taskDetailVC.reminderTime = "No Reminder Set"
@@ -222,8 +248,26 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         return cell
     }
     
-    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let taskToDelete = tasks[indexPath.row]
+            
+            let isDeleted = CoreDataManager.shared.deleteItem(item: taskToDelete)
+            
+            if isDeleted {
+                tasks.remove(at: indexPath.row)
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+                
+                updateEmptyState()
+                
+                delegate?.didUpdateTaskCount()
+            } else {
+                print("Error deleting task from Core Data")
+            }
+        }
+    }
     
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let movedTask = tasks.remove(at: sourceIndexPath.row)
         tasks.insert(movedTask, at: destinationIndexPath.row)
         
@@ -232,37 +276,18 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         }
         CoreDataManager.shared.saveContext()
     }
-    
-    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let task = tasks[indexPath.row]
-        let taskDetailVC = TaskDetail()
-        taskDetailVC.taskTitle = task.name
-        taskDetailVC.dueDate = task.dueDate != nil ? DateFormatter.localizedString(from: task.dueDate!, dateStyle: .medium, timeStyle: .none) : "No Date Selected"
-        
-        if let reminderTime = task.reminderTime {
-            let timeFormatter = DateFormatter()
-            timeFormatter.dateFormat = "HH:mm"
-            taskDetailVC.reminderTime = timeFormatter.string(from: reminderTime)
-        } else {
-            taskDetailVC.reminderTime = "No Reminder Set"
-        }
-        
-        navigationController?.pushViewController(taskDetailVC, animated: true)
-        
-        tableView.deselectRow(at: indexPath, animated: true)
-    }
 
     @objc private func didTapBackButton() {
         navigationController?.popToRootViewController(animated: true)
     }
     
     @objc func handleLongPressGesture(_ gesture: UILongPressGestureRecognizer) {
-        guard gesture.state == .began else { return }
-        tableView.setEditing(!tableView.isEditing, animated: true)
+        switch gesture.state {
+        case .began:
+            tableView.setEditing(!tableView.isEditing, animated: true)
+        default:
+            break
+        }
     }
     
     @objc private func didTapPlusButton() {

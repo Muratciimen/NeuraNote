@@ -10,10 +10,8 @@ import UIKit
 
 class CoreDataManager {
     
-    // Singleton örneği
     static let shared = CoreDataManager()
     
-    // Core Data konteksi
     private let context: NSManagedObjectContext
     
     private init() {
@@ -85,7 +83,7 @@ class CoreDataManager {
     }
     
     // MARK: - Create ToDoList Item
-    func createItem(name: String, dueDate: Date, color: UIColor, category: Kategori) -> ToDoListitem? {
+    func createItem(name: String, dueDate: Date, reminderTime: Date?, color: UIColor, category: Kategori) -> ToDoListitem? {
         // 1. Aynı ada sahip bir görev olup olmadığını kontrol ediyoruz
         let request = ToDoListitem.fetchRequest() as NSFetchRequest<ToDoListitem>
         request.predicate = NSPredicate(format: "name == %@ AND category == %@", name, category)
@@ -106,6 +104,7 @@ class CoreDataManager {
         newItem.name = name
         newItem.createdAt = Date()
         newItem.dueDate = dueDate
+        newItem.reminderTime = reminderTime  // Yeni hatırlatma zamanı ekleniyor
         newItem.isCompleted = false
         newItem.color = NSKeyedArchiver.archivedData(withRootObject: color)
         newItem.category = category
@@ -120,12 +119,11 @@ class CoreDataManager {
         }
     }
 
-
-    
     // MARK: - Update ToDoList Item
-    func updateItem(item: ToDoListitem, newName: String, newDueDate: Date) -> Bool {
+    func updateItem(item: ToDoListitem, newName: String, newDueDate: Date, newReminderTime: Date?) -> Bool {
         item.name = newName
         item.dueDate = newDueDate
+        item.reminderTime = newReminderTime  // Hatırlatma zamanı güncelleniyor
         
         return saveContext()
     }

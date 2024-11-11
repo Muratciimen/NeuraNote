@@ -33,6 +33,8 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
     weak var delegate: CreateTaskViewControllerDelegate?
     var category: Kategori?
     private var isTaskSaved = false
+    var dueDateText: String?
+    var reminderTime: String?
     
    
     @objc var datePickerSelectButton = UIButton()
@@ -110,7 +112,7 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
             make.height.width.equalTo(24)
         }
         
-        reminderIcon.image = UIImage(named: "Calendar")
+        reminderIcon.image = UIImage(named: "Alarm")
         view.addSubview(reminderIcon)
         
         reminderIcon.snp.makeConstraints { make in
@@ -321,8 +323,13 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
         )
     
         updateReminderMinimumTime(for: selectedDate)
+        checkIfSaveButtonShouldBeEnabled()
         
         datePickerContainer.isHidden = true
+    }
+    
+    func textViewDidChange(_ textView: UITextView) {
+        checkIfSaveButtonShouldBeEnabled()
     }
     
     @objc private func didSelectReminderTime() {
@@ -343,6 +350,7 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
             for: .normal
         )
         
+        checkIfSaveButtonShouldBeEnabled()
         reminderPickerContainer.isHidden = true
     }
     
@@ -365,6 +373,7 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
         }
         
         isTaskSaved = true
+        
         guard let taskDescription = descriptionTextView.text,
               !taskDescription.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             print("Task description is empty.")
@@ -394,16 +403,28 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
             return
         }
 
-        if let _ = CoreDataManager.shared.createItem(name: taskDescription, dueDate: dueDate, color: UIColor.systemBlue, category: category) {
+        
+        let reminderTimeString = reminderButton.titleLabel?.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "HH:mm"
+        let reminderTime = timeFormatter.date(from: reminderTimeString)
+        
+        
+        if let savedTask = CoreDataManager.shared.createItem(name: taskDescription, dueDate: dueDate, reminderTime: reminderTime, color: UIColor.systemBlue, category: category) {
             print("Task successfully saved to CoreData.")
             
             delegate?.didCreateTask(title: taskDescription, dueDate: dueDateText, category: category)
-            NotificationCenter.default.post(name: NSNotification.Name("TaskAdded"), object: nil)
+            
+            print("Due Date:", dueDateText)
+            print("Reminder Time:", reminderTimeString)
+            
         } else {
             print("Failed to save task to CoreData.")
             isTaskSaved = false
+            return
         }
         
         dismiss(animated: true, completion: nil)
     }
+
 }

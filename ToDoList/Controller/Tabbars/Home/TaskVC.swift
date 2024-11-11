@@ -46,7 +46,6 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
     func setupUI() {
         view.backgroundColor = UIColor(hex: "F9F9F9")
         
-    
         backButton.setImage(UIImage(named: "back2"), for: .normal)
         backButton.tintColor = UIColor(hex: "#484848")
         backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
@@ -56,7 +55,6 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
             make.left.equalToSuperview().offset(16)
             make.width.height.equalTo(50)
         }
-        
     
         titleLabel.textColor = UIColor(hex: "#484848")
         titleLabel.font = UIFont.systemFont(ofSize: 22, weight: .medium)
@@ -67,7 +65,6 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
             make.centerX.equalToSuperview()
         }
         
-        
         plusButton.setImage(UIImage(named: "plus"), for: .normal)
         plusButton.addTarget(self, action: #selector(didTapPlusButton), for: .touchUpInside)
         view.addSubview(plusButton)
@@ -77,7 +74,6 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
             make.width.height.equalTo(50)
         }
         
-      
         tableView.dataSource = self
         tableView.delegate = self
         tableView.separatorStyle = .none
@@ -90,7 +86,6 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
             make.left.right.bottom.equalToSuperview()
         }
 
-    
         taskImageView.image = UIImage(named: "note")
         taskImageView.contentMode = .scaleAspectFit
         taskImageView.alpha = 0.4
@@ -207,10 +202,20 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         cell.buttonTappedAction = { [weak self] in
             guard let self = self else { return }
             
+            // TaskDetail ekranını başlat ve verileri ata
             let taskDetailVC = TaskDetail()
-            
             taskDetailVC.taskTitle = task.name
-        
+            taskDetailVC.dueDate = task.dueDate != nil ? DateFormatter.localizedString(from: task.dueDate!, dateStyle: .medium, timeStyle: .none) : "No Date Selected"
+            
+            // reminderTime'ı String'e çevirme
+            if let reminderTime = task.reminderTime {
+                let timeFormatter = DateFormatter()
+                timeFormatter.dateFormat = "HH:mm" // Saat formatı
+                taskDetailVC.reminderTime = timeFormatter.string(from: reminderTime)
+            } else {
+                taskDetailVC.reminderTime = "No Reminder Set"
+            }
+            
             self.navigationController?.pushViewController(taskDetailVC, animated: true)
         }
         
@@ -233,6 +238,21 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let task = tasks[indexPath.row]
+        let taskDetailVC = TaskDetail()
+        taskDetailVC.taskTitle = task.name
+        taskDetailVC.dueDate = task.dueDate != nil ? DateFormatter.localizedString(from: task.dueDate!, dateStyle: .medium, timeStyle: .none) : "No Date Selected"
+        
+        if let reminderTime = task.reminderTime {
+            let timeFormatter = DateFormatter()
+            timeFormatter.dateFormat = "HH:mm"
+            taskDetailVC.reminderTime = timeFormatter.string(from: reminderTime)
+        } else {
+            taskDetailVC.reminderTime = "No Reminder Set"
+        }
+        
+        navigationController?.pushViewController(taskDetailVC, animated: true)
+        
         tableView.deselectRow(at: indexPath, animated: true)
     }
 

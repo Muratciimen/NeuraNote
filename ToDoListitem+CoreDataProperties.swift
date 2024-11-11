@@ -24,6 +24,7 @@ extension ToDoListitem {
     @NSManaged public var isCompleted: Bool
     @NSManaged public var name: String?
     @NSManaged public var category: Kategori?
+    @NSManaged public var reminderTime: Date?
 
 }
 

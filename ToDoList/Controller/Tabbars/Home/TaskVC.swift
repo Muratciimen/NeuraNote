@@ -134,10 +134,14 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         taskEmptyLabel.isHidden = !isTaskListEmpty
     }
 
-    func didCreateTask(title: String, dueDate: String, category: Kategori) {
+    func didCreateTask(title: String, dueDate: String, reminderTime: String, category: Kategori) {
         loadTasks()
         delegate?.didUpdateTaskCount()
     }
+//    func didCreateTask(title: String, dueDate: String, category: Kategori) {
+//        loadTasks()
+//        delegate?.didUpdateTaskCount()
+//    }
 
     // MARK: - İlk Açılış Kontrolü ve Overlay Gösterimi
     
@@ -186,26 +190,29 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         return tasks.count
     }
     
-        func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-            let task = tasks[indexPath.row]
-            let taskDetailVC = TaskDetail()
-            taskDetailVC.taskTitle = task.name
-            taskDetailVC.dueDate = task.dueDate != nil ? DateFormatter.localizedString(from: task.dueDate!, dateStyle: .medium, timeStyle: .none) : "No Date Selected"
-    
-            if let reminderTime = task.reminderTime {
-                let timeFormatter = DateFormatter()
-                timeFormatter.dateFormat = "HH:mm"
-                taskDetailVC.reminderTime = timeFormatter.string(from: reminderTime)
-            } else {
-                taskDetailVC.reminderTime = "No Reminder Set"
-            }
-    
-            
-            navigationController?.pushViewController(taskDetailVC, animated: true)
-    
-           
-            tableView.deselectRow(at: indexPath, animated: true)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let task = tasks[indexPath.row]
+        let taskDetailVC = TaskDetail()
+        
+        print("Category in didSelectRowAt:", task.category?.name ?? "Category is nil")
+        
+        taskDetailVC.taskTitle = task.name
+        taskDetailVC.dueDate = task.dueDate != nil ? DateFormatter.localizedString(from: task.dueDate!, dateStyle: .medium, timeStyle: .none) : "No Date Selected"
+
+        if let reminderTime = task.reminderTime {
+            let timeFormatter = DateFormatter()
+            timeFormatter.dateFormat = "HH:mm"
+            taskDetailVC.reminderTime = timeFormatter.string(from: reminderTime)
+        } else {
+            taskDetailVC.reminderTime = "No Reminder Set"
         }
+
+        taskDetailVC.category = task.category
+        taskDetailVC.taskToEdit = task
+        
+        navigationController?.pushViewController(taskDetailVC, animated: true)
+        tableView.deselectRow(at: indexPath, animated: true)
+    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoListCell", for: indexPath) as? ToDoListCell else {

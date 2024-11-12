@@ -5,15 +5,23 @@
 //  Created by Murat Çimen on 4.11.2024.
 //
 
-
 import UIKit
 import SnapKit
+import UserNotifications
 
 protocol CreateTaskViewControllerDelegate: AnyObject {
-    func didCreateTask(title: String, dueDate: String, category: Kategori)
+    func didCreateTask(title: String, dueDate: String, reminderTime: String, category: Kategori)
 }
 
 class CreateTaskViewController: UIViewController, UITextViewDelegate {
+    
+    var isEditMode: Bool = false
+    var taskToEdit: ToDoListitem?
+    var taskTitle: String?
+    var dueDate: String?
+    var reminderTime: String?
+    var descriptionText: String?
+    var category: Kategori?
     
     let createTaskTitleLabel = UILabel()
     let dueDateLabel = UILabel()
@@ -31,23 +39,45 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
     let reminderPickerContainer = UIView()
     let reminderDatePicker = UIDatePicker()
     weak var delegate: CreateTaskViewControllerDelegate?
-    var category: Kategori?
+   
     private var isTaskSaved = false
     var dueDateText: String?
-    var reminderTime: String?
     
-   
     @objc var datePickerSelectButton = UIButton()
     @objc var reminderPickerSelectButton = UIButton()
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         setupView()
         setupDatePickerContainer()
         setupReminderPickerContainer()
         configureDatePicker()
+        
+        print("Category in CreateTaskViewController viewDidLoad:", category?.name ?? "Category is nil")
+        
+        if isEditMode {
+            createTaskTitleLabel.text = "Edit Task"
+            loadTaskData()
+        } else {
+            createTaskTitleLabel.text = "Create Task"
+        }
+        
         descriptionTextView.delegate = self
         saveButton.isEnabled = false
+         
+    }
+    
+    private func loadTaskData() {
+        createTaskTitleLabel.text = isEditMode ? "Edit Task" : "Create Task"
+        dueDateButton.setTitle("       \(dueDate ?? "Select Date")", for: .normal)
+        reminderButton.setTitle("       \(reminderTime ?? "Select Reminder")", for: .normal)
+        
+        descriptionTextView.text = taskTitle ?? ""
+        category = taskToEdit?.category
+        
+        saveButton.isEnabled = true
+        saveButton.backgroundColor = UIColor(hex: "FFAF5F")
     }
     
     // MARK: - UI Kurulumu
@@ -350,6 +380,8 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
             for: .normal
         )
         
+        reminderTime = formattedTime
+        
         checkIfSaveButtonShouldBeEnabled()
         reminderPickerContainer.isHidden = true
     }
@@ -367,6 +399,8 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
     
     // MARK: - Görev Kaydetme İşlemi
     @objc private func saveButtonTapped() {
+        print("Category in saveButtonTapped at start:", category?.name ?? "Category is nil")
+
         guard !isTaskSaved else {
             print("Task is already saved.")
             return
@@ -397,34 +431,53 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
             return
         }
 
-        guard let category = category else {
+        if isEditMode, let taskToEdit = taskToEdit {
+            category = taskToEdit.category
+        }
+
+        if !isEditMode, category == nil {
             print("Category is missing.")
             isTaskSaved = false
             return
         }
 
-        
         let reminderTimeString = reminderButton.titleLabel?.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let timeFormatter = DateFormatter()
         timeFormatter.dateFormat = "HH:mm"
-        let reminderTime = timeFormatter.date(from: reminderTimeString)
-        
-        
-        if let savedTask = CoreDataManager.shared.createItem(name: taskDescription, dueDate: dueDate, reminderTime: reminderTime, color: UIColor.systemBlue, category: category) {
-            print("Task successfully saved to CoreData.")
-            
-            delegate?.didCreateTask(title: taskDescription, dueDate: dueDateText, category: category)
-            
-            print("Due Date:", dueDateText)
-            print("Reminder Time:", reminderTimeString)
-            
+        let reminderTimeDate = timeFormatter.date(from: reminderTimeString)
+
+        if isEditMode, let taskToEdit = taskToEdit {
+            let success = CoreDataManager.shared.updateItem(
+                item: taskToEdit,
+                newName: taskDescription,
+                newDueDate: dueDate,
+                newReminderTime: reminderTimeDate
+            )
+            if success {
+                print("Task successfully updated in CoreData.")
+                if let existingCategory = taskToEdit.category {
+                    delegate?.didCreateTask(title: taskDescription, dueDate: dueDateText, reminderTime: reminderTimeString, category: existingCategory)
+                }
+            } else {
+                print("Failed to update task in CoreData.")
+                isTaskSaved = false
+            }
         } else {
-            print("Failed to save task to CoreData.")
-            isTaskSaved = false
-            return
+            if let savedTask = CoreDataManager.shared.createItem(
+                name: taskDescription,
+                dueDate: dueDate,
+                reminderTime: reminderTimeDate,
+                color: UIColor.systemBlue,
+                category: category!
+            ) {
+                print("Task successfully saved to CoreData.")
+                delegate?.didCreateTask(title: taskDescription, dueDate: dueDateText, reminderTime: reminderTimeString, category: category!)
+            } else {
+                print("Failed to save task to CoreData.")
+                isTaskSaved = false
+            }
         }
         
         dismiss(animated: true, completion: nil)
     }
-
 }

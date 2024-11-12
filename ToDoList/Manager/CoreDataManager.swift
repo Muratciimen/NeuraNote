@@ -37,7 +37,7 @@ class CoreDataManager {
         let newCategory = Kategori(context: context)
         newCategory.id = UUID()
         newCategory.name = name
-        newCategory.color = NSKeyedArchiver.archivedData(withRootObject: color) // `Data` olarak kaydediliyor
+        newCategory.color = NSKeyedArchiver.archivedData(withRootObject: color)
 
         do {
             try context.save()
@@ -72,8 +72,7 @@ class CoreDataManager {
     func fetchItems(byCategory category: Kategori) -> [ToDoListitem] {
         let fetchRequest: NSFetchRequest<ToDoListitem> = ToDoListitem.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "category == %@", category)
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "index", ascending: true)] // `index` değerine göre sırala
-        
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "index", ascending: true)]
         do {
             return try context.fetch(fetchRequest)
         } catch {
@@ -84,34 +83,25 @@ class CoreDataManager {
     
     // MARK: - Create ToDoList Item
     func createItem(name: String, dueDate: Date, reminderTime: Date?, color: UIColor, category: Kategori) -> ToDoListitem? {
-        // 1. Aynı ada sahip bir görev olup olmadığını kontrol ediyoruz
-        let request = ToDoListitem.fetchRequest() as NSFetchRequest<ToDoListitem>
-        request.predicate = NSPredicate(format: "name == %@ AND category == %@", name, category)
-
-        do {
-            let existingTasks = try context.fetch(request)
-            if !existingTasks.isEmpty {
-                print("Task with this name already exists.")
-                return nil // Aynı ada sahip bir görev varsa, yeni görev eklenmiyor
-            }
-        } catch {
-            print("Error checking for existing task: \(error)")
-            return nil
-        }
-
-        // 2. Yeni görevi ekleme işlemi
         let newItem = ToDoListitem(context: context)
         newItem.name = name
         newItem.createdAt = Date()
         newItem.dueDate = dueDate
-        newItem.reminderTime = reminderTime  // Yeni hatırlatma zamanı ekleniyor
+        newItem.reminderTime = reminderTime
         newItem.isCompleted = false
         newItem.color = NSKeyedArchiver.archivedData(withRootObject: color)
         newItem.category = category
 
+
+
+        print("Core Data'ya kaydedilen Task:")
+        print("Name: \(newItem.name)")
+        print("Due Date: \(newItem.dueDate ?? Date())")
+        print("Reminder Time: \(newItem.reminderTime ?? Date())")
+        print("Description (Brief): \(newItem.brief ?? "Açıklama yok")")
+
         do {
             try context.save()
-            print("Task successfully saved to CoreData.")
             return newItem
         } catch {
             print("Error creating item: \(error)")
@@ -119,11 +109,12 @@ class CoreDataManager {
         }
     }
 
+
     // MARK: - Update ToDoList Item
     func updateItem(item: ToDoListitem, newName: String, newDueDate: Date, newReminderTime: Date?) -> Bool {
         item.name = newName
         item.dueDate = newDueDate
-        item.reminderTime = newReminderTime  // Hatırlatma zamanı güncelleniyor
+        item.reminderTime = newReminderTime
         
         return saveContext()
     }

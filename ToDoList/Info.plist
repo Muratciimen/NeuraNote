@@ -3,8 +3,6 @@
 <plist version="1.0">
 <dict>
 	<key>NSUserNotificationUsageDescription</key>
-	<string>&quot;The app needs notification permission to send you reminders and alerts.&quot;</string>
-	<key>NSUserTrackingUsageDescription</key>
-	<string>We need your permission to track your activity across other companies&apos; apps and websites. This will allow us to provide personalized content and ads tailored to your interests, ensuring a more relevant and engaging experience. Additionally, we use this data to continuously improve app performance and enhance your overall user experience.</string>
+	<string>"The app needs notification permission to send you reminders and alerts."</string>
 </dict>
 </plist>

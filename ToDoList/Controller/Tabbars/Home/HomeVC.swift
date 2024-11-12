@@ -169,7 +169,7 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Crea
         let taskVC = TaskVC()
         taskVC.taskTitle = category.name
         taskVC.category = category
-        taskVC.delegate = self // TaskVC'ye HomeVC'yi delegate olarak atıyoruz
+        taskVC.delegate = self 
         navigationController?.pushViewController(taskVC, animated: true)
     }
 

@@ -7,11 +7,14 @@
 import UIKit
 import SnapKit
 
-class TaskDetail: UIViewController {
+class TaskDetail: UIViewController, CreateTaskViewControllerDelegate {
     
     var taskTitle: String?
     var dueDate: String?
     var reminderTime: String?
+    var descriptionText: String?
+    var category: Kategori?
+    var taskToEdit: ToDoListitem?
     
     var titleLabel = UILabel()
     let dateView = UIView()
@@ -26,6 +29,7 @@ class TaskDetail: UIViewController {
     let briefView = UIView()
     let briefIcon = UIImageView()
     let imageView = UIImageView()
+    var editButton = UIButton()
     
     let apiManager = APIManager()
     
@@ -40,6 +44,19 @@ class TaskDetail: UIViewController {
         reminderSecondLabel.text = reminderTime ?? "No Reminder Set"
         
         fetchBrief() 
+    }
+    
+    func didCreateTask(title: String, dueDate: String,reminderTime: String, category: Kategori) {
+        self.taskTitle = title
+        self.dueDate = dueDate
+        self.reminderTime = reminderTime
+        self.category = category
+        
+        // UI elemanlarını hemen güncelle
+        titleLabel.text = title
+        dateLabel.text = dueDate
+        reminderSecondLabel.text = reminderTime
+        print("Task updated with title: \(title), dueDate: \(dueDate), category: \(category.name)")
     }
     
     func fetchBrief() {
@@ -220,8 +237,42 @@ class TaskDetail: UIViewController {
             make.bottom.equalToSuperview().offset(-12)
         }
         
+        editButton.backgroundColor = UIColor(hex: "FFAF5F")
+        editButton = UIButton.createCustomButton(of: .editTask, target: self, action: #selector(editButtonTapped))
+        view.addSubview(editButton)
+        
+        editButton.snp.makeConstraints { make in
+            make.top.equalTo(briefLabel.snp.bottom).offset(24)
+            make.left.equalTo(24)
+            make.right.equalTo(-24)
+            make.height.equalTo(56)
+        }
+        
     }
     
+    @objc private func editButtonTapped() {
+        let createTaskVC = CreateTaskViewController()
+        
+        createTaskVC.isEditMode = true
+        createTaskVC.taskTitle = taskTitle
+        createTaskVC.dueDate = dueDate
+        createTaskVC.reminderTime = reminderTime
+        createTaskVC.descriptionText = descriptionText
+        createTaskVC.taskToEdit = self.taskToEdit
+        createTaskVC.category = category
+        
+        createTaskVC.delegate = self
+        
+        createTaskVC.modalPresentationStyle = .pageSheet
+        
+        if let sheet = createTaskVC.sheetPresentationController {
+            sheet.detents = [.medium()]
+            sheet.prefersGrabberVisible = true
+            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+        }
+        
+        present(createTaskVC, animated: true, completion: nil)
+    }
     func configureNavigationBar() {
         navigationItem.title = ""
         navigationItem.hidesBackButton = true

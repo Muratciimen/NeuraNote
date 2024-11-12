@@ -11,18 +11,12 @@ import SnapKit
 
 enum HeaderType {
     case toDoList
-    case calender
-    case settings
     case taskDetail
     
     var title: String {
         switch self {
         case .toDoList:
             return "To Do List"
-        case .calender:
-            return "Calender"
-        case .settings:
-            return "Settings"
         case .taskDetail:
             return "Task Detail"
         }

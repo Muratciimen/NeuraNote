@@ -32,7 +32,6 @@ class ReminderAndDateView: UIView {
     
     func setupUI() {
         dateView.backgroundColor = .red
-//        dateView.backgroundColor = UIColor(hex: "F6F6F6")
         dateView.layer.borderColor = UIColor(hex: "DADADA").cgColor
         dateView.layer.cornerRadius = 12
         dateView.layer.borderWidth = 0.5

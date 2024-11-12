@@ -11,7 +11,7 @@ import SnapKit
 
 class CustomButtonVC: UIViewController {
 
-    func configureButton(in parentStackView: UIStackView, title: String, titleColor: UIColor, backgroundColor: UIColor, font: UIFont, dynamicImageName: String, action: Selector) -> UIButton {
+    func configureButton(in parentStackView: UIStackView, title: String, titleColor: UIColor, backgroundColor: UIColor, font: UIFont, dynamicImageName: String, urlString: String) -> UIButton {
         
         let customButton: UIButton = {
             let button = UIButton(type: .system)
@@ -21,24 +21,21 @@ class CustomButtonVC: UIViewController {
             button.titleLabel?.font = font
             button.contentHorizontalAlignment = .left
             button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 20, bottom: 0, right: 0)
-            button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 10)  
+            button.imageEdgeInsets = UIEdgeInsets(top: 0, left: -10, bottom: 0, right: 10)
             return button
         }()
         
         customButton.setTitle(title, for: .normal)
         
-       
-        if let dynamicImage = UIImage(systemName: dynamicImageName) {
+        if let dynamicImage = UIImage(named: dynamicImageName)?.withRenderingMode(.alwaysTemplate) {
             customButton.setImage(dynamicImage, for: .normal)
-            customButton.tintColor = UIColor(hex: "#4a4949")
             customButton.imageView?.contentMode = .scaleAspectFit
+            customButton.tintColor = UIColor(hex: "#FEA543")
         }
         
-      
-        let chevronImageView = UIImageView(image: UIImage(systemName: "chevron.right"))
-        chevronImageView.tintColor = UIColor(hex: "#4a4949")
+        let chevronImageView = UIImageView(image: UIImage(named: "right")?.withRenderingMode(.alwaysTemplate))
+        chevronImageView.tintColor = UIColor(hex: "#64666D")
         customButton.addSubview(chevronImageView)
-        
         
         chevronImageView.snp.makeConstraints { make in
             make.centerY.equalToSuperview()
@@ -46,7 +43,9 @@ class CustomButtonVC: UIViewController {
             make.width.height.equalTo(15)
         }
         
-        customButton.addTarget(self, action: action, for: .touchUpInside)
+        customButton.addAction(UIAction(handler: { _ in
+            self.openURL(urlString)
+        }), for: .touchUpInside)
         
         parentStackView.addArrangedSubview(customButton)
         
@@ -56,5 +55,12 @@ class CustomButtonVC: UIViewController {
         
         return customButton
     }
-}
 
+    func openURL(_ urlString: String) {
+        guard let url = URL(string: urlString), UIApplication.shared.canOpenURL(url) else {
+            print("Geçersiz URL: \(urlString)")
+            return
+        }
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
+}

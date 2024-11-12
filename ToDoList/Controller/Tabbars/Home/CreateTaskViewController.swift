@@ -22,7 +22,6 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
     var reminderTime: String?
     var descriptionText: String?
     var category: Kategori?
-    
     let createTaskTitleLabel = UILabel()
     let dueDateLabel = UILabel()
     let dueDateIcon = UIImageView()

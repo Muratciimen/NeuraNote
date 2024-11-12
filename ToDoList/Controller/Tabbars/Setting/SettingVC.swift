@@ -22,21 +22,21 @@ class SettingVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = UIColor(hex: "#EEEEEE")
+        view.backgroundColor = UIColor(hex: "F9F9F9")
         setupUI()
     }
     
     func setupUI() {
         let settingTitleLabel = UILabel()
-        settingTitleLabel.text = "Setting"
-        settingTitleLabel.textAlignment = .left
-        settingTitleLabel.textColor = UIColor(hex: "#4a4949")
-        settingTitleLabel.font = UIFont.systemFont(ofSize: 32, weight: .bold)
+        settingTitleLabel.text = "Settings"
+        settingTitleLabel.textAlignment = .center
+        settingTitleLabel.textColor = UIColor(hex: "484848")
+        settingTitleLabel.font = UIFont.systemFont(ofSize: 20, weight: .medium)
         view.addSubview(settingTitleLabel)
         
         settingTitleLabel.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).multipliedBy(0.1)
-            make.left.equalTo(16)
+            make.centerX.equalToSuperview()
         }
         
         view.addSubview(stackView)
@@ -56,81 +56,32 @@ class SettingVC: UIViewController {
         buttonVC.configureButton(
             in: stackView,
             title: "Rate Us",
-            titleColor: UIColor(hex: "#4a4949"),
-            backgroundColor: UIColor(hex: "#DBDBDB"),
+            titleColor: UIColor(hex: "#4C4C4C"),
+            backgroundColor: UIColor(hex: "#F9F9F9"),
             font: UIFont.systemFont(ofSize: 17),
-            dynamicImageName: "star",
-            action: #selector(rateUsButtonTapped)
+            dynamicImageName: "Style4",
+            urlString: "https://www.example.com/rate"
         )
-        
-      
-        buttonVC.configureButton(
-            in: stackView,
-            title: "Share the App",
-            titleColor: UIColor(hex: "#4a4949"),
-            backgroundColor: UIColor(hex: "#DBDBDB"),
-            font: UIFont.systemFont(ofSize: 17),
-            dynamicImageName: "square.and.arrow.up",
-            action: #selector(shareAppButtonTapped)
-        )
-        
         
         buttonVC.configureButton(
             in: stackView,
-            title: "Give Feedback",
-            titleColor: UIColor(hex: "#4a4949"),
-            backgroundColor: UIColor(hex: "#DBDBDB"),
+            title: "Privacy Policy",
+            titleColor: UIColor(hex: "#4C4C4C"),
+            backgroundColor: UIColor(hex: "#F9F9F9"),
             font: UIFont.systemFont(ofSize: 17),
-            dynamicImageName: "exclamationmark.bubble",
-            action: #selector(giveFeedbackButtonTapped)
+            dynamicImageName: "ShieldCheck",
+            urlString: "https://sites.google.com/view/neura-note/ana-sayfa"
         )
         
         
         buttonVC.configureButton(
             in: stackView,
             title: "Terms of Us",
-            titleColor: UIColor(hex: "#4a4949"),
-            backgroundColor: UIColor(hex: "#DBDBDB"),
+            titleColor: UIColor(hex: "#4C4C4C"),
+            backgroundColor: UIColor(hex: "#F9F9F9"),
             font: UIFont.systemFont(ofSize: 17),
-            dynamicImageName: "doc.text",
-            action: #selector(termsOfUseButtonTapped)
+            dynamicImageName: "DocumentText",
+            urlString: "https://sites.google.com/view/neura-note/terms-of-use"
         )
-        
-        
-        buttonVC.configureButton(
-            in: stackView,
-            title: "Privacy Policy",
-            titleColor: UIColor(hex: "#4a4949"),
-            backgroundColor: UIColor(hex: "#DBDBDB"),
-            font: UIFont.systemFont(ofSize: 17),
-            dynamicImageName: "eye",
-            action: #selector(privacyPolicyButtonTapped)
-        )
-    }
-    
-    
-    @objc func rateUsButtonTapped() {
-        print("Rate Us butonuna tıklandı")
-      
-    }
-    
-    @objc func shareAppButtonTapped() {
-        print("Share the App butonuna tıklandı")
-        
-    }
-    
-    @objc func giveFeedbackButtonTapped() {
-        print("Give Feedback butonuna tıklandı")
-       
-    }
-    
-    @objc func termsOfUseButtonTapped() {
-        print("Terms of Use butonuna tıklandı")
-       
-    }
-    
-    @objc func privacyPolicyButtonTapped() {
-        print("Privacy Policy butonuna tıklandı")
-       
     }
 }

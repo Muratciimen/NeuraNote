@@ -15,7 +15,6 @@ class TaskDetail: UIViewController, CreateTaskViewControllerDelegate {
     var descriptionText: String?
     var category: Kategori?
     var taskToEdit: ToDoListitem?
-    
     var titleLabel = UILabel()
     let dateView = UIView()
     let dueDateIcon = UIImageView()
@@ -30,7 +29,6 @@ class TaskDetail: UIViewController, CreateTaskViewControllerDelegate {
     let briefIcon = UIImageView()
     let imageView = UIImageView()
     var editButton = UIButton()
-    
     let apiManager = APIManager()
     
     override func viewDidLoad() {
@@ -52,7 +50,7 @@ class TaskDetail: UIViewController, CreateTaskViewControllerDelegate {
         self.reminderTime = reminderTime
         self.category = category
         
-        // UI elemanlarını hemen güncelle
+       
         titleLabel.text = title
         dateLabel.text = dueDate
         reminderSecondLabel.text = reminderTime

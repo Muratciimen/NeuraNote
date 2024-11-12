@@ -20,7 +20,7 @@ extension Kategori {
     @NSManaged public var name: String?
     @NSManaged public var color: Data?
     @NSManaged public var items: Set<ToDoListitem>?
-
+    @NSManaged public var createdDate: Date?
 }
 
 extension Kategori : Identifiable {

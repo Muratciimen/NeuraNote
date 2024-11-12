@@ -21,7 +21,7 @@ class CoreDataManager {
     // MARK: - Fetch All Categories
     func fetchAllCategories() -> [Kategori] {
         let request = Kategori.fetchRequest() as NSFetchRequest<Kategori>
-        let sortDescriptor = NSSortDescriptor(key: "name", ascending: true)
+        let sortDescriptor = NSSortDescriptor(key: "createdDate", ascending: false) 
         request.sortDescriptors = [sortDescriptor]
         
         do {
@@ -33,12 +33,14 @@ class CoreDataManager {
     }
     
     // MARK: - Create Category
+
     func createCategory(name: String, color: UIColor) -> Kategori? {
         let newCategory = Kategori(context: context)
         newCategory.id = UUID()
         newCategory.name = name
         newCategory.color = NSKeyedArchiver.archivedData(withRootObject: color)
-
+        newCategory.createdDate = Date()
+    
         do {
             try context.save()
             return newCategory
@@ -69,10 +71,11 @@ class CoreDataManager {
     }
     
     // MARK: - Fetch Items by Category
+    
     func fetchItems(byCategory category: Kategori) -> [ToDoListitem] {
         let fetchRequest: NSFetchRequest<ToDoListitem> = ToDoListitem.fetchRequest()
         fetchRequest.predicate = NSPredicate(format: "category == %@", category)
-        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "index", ascending: true)]
+        fetchRequest.sortDescriptors = [NSSortDescriptor(key: "createdAt", ascending: false)] 
         do {
             return try context.fetch(fetchRequest)
         } catch {
@@ -80,7 +83,7 @@ class CoreDataManager {
             return []
         }
     }
-    
+
     // MARK: - Create ToDoList Item
     func createItem(name: String, dueDate: Date, reminderTime: Date?, color: UIColor, category: Kategori) -> ToDoListitem? {
         let newItem = ToDoListitem(context: context)

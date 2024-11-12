@@ -136,7 +136,7 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Crea
         } else {
             cell.configure(title: category.name ?? "Untitled", taskCount: category.items?.count ?? 0, color: .white)
         }
-
+        cell.selectionStyle = .none
         return cell
     }
 

@@ -51,7 +51,6 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
 
     func setupUI() {
         view.backgroundColor = UIColor(hex: "F9F9F9")
-        
         backButton.setImage(UIImage(named: "back2"), for: .normal)
         backButton.tintColor = UIColor(hex: "#484848")
         backButton.addTarget(self, action: #selector(didTapBackButton), for: .touchUpInside)
@@ -117,9 +116,11 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         updateEmptyState()
     }
 
+    
     func loadTasks() {
         if let category = category {
-            tasks = CoreDataManager.shared.fetchItems(byCategory: category).sorted(by: { $0.index < $1.index })
+          
+            tasks = CoreDataManager.shared.fetchItems(byCategory: category).sorted(by: { $0.createdAt ?? Date() > $1.createdAt ?? Date() })
         } else {
             tasks = []
         }
@@ -138,11 +139,6 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         loadTasks()
         delegate?.didUpdateTaskCount()
     }
-//    func didCreateTask(title: String, dueDate: String, category: Kategori) {
-//        loadTasks()
-//        delegate?.didUpdateTaskCount()
-//    }
-
     // MARK: - İlk Açılış Kontrolü ve Overlay Gösterimi
     
     func showOverlayIfFirstLaunch() {
@@ -251,6 +247,7 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
             
             self.navigationController?.pushViewController(taskDetailVC, animated: true)
         }
+        cell.selectionStyle = .none
         
         return cell
     }

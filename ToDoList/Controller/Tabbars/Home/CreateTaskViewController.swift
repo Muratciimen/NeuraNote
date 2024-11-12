@@ -236,9 +236,11 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
     // MARK: - DatePicker Kurulumu
     private func setupDatePickerContainer() {
         datePickerContainer.backgroundColor = .white
+        datePickerContainer.tintColor = .black
         datePickerContainer.layer.cornerRadius = 16
         datePickerContainer.layer.borderColor = UIColor.lightGray.cgColor
         datePickerContainer.isHidden = true
+        datePicker.overrideUserInterfaceStyle = .light
         view.addSubview(datePickerContainer)
 
         datePicker.datePickerMode = .date
@@ -274,9 +276,11 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
     // MARK: - Reminder Picker Kurulumu
     private func setupReminderPickerContainer() {
         reminderPickerContainer.backgroundColor = .white
+        reminderPickerContainer.tintColor = .black
         reminderPickerContainer.layer.cornerRadius = 16
         reminderPickerContainer.layer.borderColor = UIColor.lightGray.cgColor
         reminderPickerContainer.isHidden = true
+        reminderDatePicker.overrideUserInterfaceStyle = .light 
         view.addSubview(reminderPickerContainer)
         
         reminderDatePicker.datePickerMode = .time
@@ -343,7 +347,7 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
         
         dueDateButton.setAttributedTitle(
             NSAttributedString(
-                string: "       \(formattedDate)",
+                string: "\(formattedDate)",
                 attributes: [
                     .font: UIFont.systemFont(ofSize: 16, weight: .regular),
                     .foregroundColor: UIColor(hex: "797979")
@@ -371,7 +375,7 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
         
         reminderButton.setAttributedTitle(
             NSAttributedString(
-                string: "       \(formattedTime)",
+                string: "\(formattedTime)",
                 attributes: [
                     .font: UIFont.systemFont(ofSize: 16, weight: .regular),
                     .foregroundColor: UIColor(hex: "797979")

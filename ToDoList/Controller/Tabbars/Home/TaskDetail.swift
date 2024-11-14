@@ -252,6 +252,7 @@ class TaskDetail: UIViewController, CreateTaskViewControllerDelegate {
     @objc private func editButtonTapped() {
         let createTaskVC = CreateTaskViewController()
         
+        // Düzenleme moduna geçiş için gerekli verilerin atanması
         createTaskVC.isEditMode = true
         createTaskVC.taskTitle = taskTitle
         createTaskVC.dueDate = dueDate
@@ -265,7 +266,13 @@ class TaskDetail: UIViewController, CreateTaskViewControllerDelegate {
         createTaskVC.modalPresentationStyle = .pageSheet
         
         if let sheet = createTaskVC.sheetPresentationController {
-            sheet.detents = [.medium()]
+            // Ekran yüksekliğine göre detent ayarı
+            let screenHeight = UIScreen.main.bounds.height
+            if screenHeight < 700 { // iPhone SE gibi küçük ekranlar için
+                sheet.detents = [.large()]
+            } else {
+                sheet.detents = [.medium()]
+            }
             sheet.prefersGrabberVisible = true
             sheet.prefersScrollingExpandsWhenScrolledToEdge = false
         }

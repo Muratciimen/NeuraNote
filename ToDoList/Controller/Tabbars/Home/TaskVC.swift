@@ -300,7 +300,13 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         createTaskVC.category = self.category
 
         if let sheet = createTaskVC.sheetPresentationController {
-            sheet.detents = [.medium()]
+            
+            let screenHeight = UIScreen.main.bounds.height
+            if screenHeight < 700 { 
+                sheet.detents = [.large()]
+            } else {
+                sheet.detents = [.medium()]
+            }
             sheet.prefersGrabberVisible = true
         }
         createTaskVC.modalPresentationStyle = .pageSheet

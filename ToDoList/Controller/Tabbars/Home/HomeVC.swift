@@ -21,6 +21,11 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Crea
     
     var categoryList: [Kategori] = []
     
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        tableView.reloadData() 
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()

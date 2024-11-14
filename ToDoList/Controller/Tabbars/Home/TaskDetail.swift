@@ -30,6 +30,7 @@ class TaskDetail: UIViewController, CreateTaskViewControllerDelegate {
     let imageView = UIImageView()
     var editButton = UIButton()
     let apiManager = APIManager()
+    var task: ToDoListitem?
     
     override func viewDidLoad() {
         super.viewDidLoad()

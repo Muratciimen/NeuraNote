@@ -115,7 +115,6 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
 
         updateEmptyState()
     }
-
     
     func loadTasks() {
         if let category = category {
@@ -138,6 +137,7 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
     func didCreateTask(title: String, dueDate: String, reminderTime: String, category: Kategori) {
         loadTasks()
         delegate?.didUpdateTaskCount()
+        NotificationCenter.default.post(name: NSNotification.Name("TaskUpdated"), object: nil)
     }
     // MARK: - İlk Açılış Kontrolü ve Overlay Gösterimi
     
@@ -149,7 +149,7 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
             UserDefaults.standard.set(true, forKey: "isFirstLaunch")
             
            
-            overlayImageView.image = UIImage(named: "tip1")
+            overlayImageView.image = UIImage(named: "tip")
             overlayImageView.contentMode = .scaleAspectFill
             overlayImageView.alpha = 0.0
             overlayImageView.isUserInteractionEnabled = true
@@ -159,7 +159,7 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
             }
             
             
-            DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
                 UIView.animate(withDuration: 0.5) {
                     self?.overlayImageView.alpha = 1.0
                 }

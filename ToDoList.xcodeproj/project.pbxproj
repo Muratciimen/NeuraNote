@@ -20,6 +20,7 @@
 		38140B9F2CD50F9D0052B242 /* HomeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38140B9E2CD50F9D0052B242 /* HomeCell.swift */; };
 		38140BA52CD80EF40052B242 /* OrangeButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38140BA42CD80EF40052B242 /* OrangeButtons.swift */; };
 		38140BA92CD813FC0052B242 /* TaskVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38140BA82CD813FC0052B242 /* TaskVC.swift */; };
+		382E9A002CE7361200BADCCB /* NotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 382E99FF2CE7361200BADCCB /* NotificationManager.swift */; };
 		38593AC42CBD38DC0048B95C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38593AC32CBD38DC0048B95C /* AppDelegate.swift */; };
 		38593ACE2CBD38DC0048B95C /* ToDoList.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 38593ACC2CBD38DC0048B95C /* ToDoList.xcdatamodeld */; };
 		38593AD02CBD38DE0048B95C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 38593ACF2CBD38DE0048B95C /* Assets.xcassets */; };
@@ -52,6 +53,7 @@
 		38140B9E2CD50F9D0052B242 /* HomeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCell.swift; sourceTree = "<group>"; };
 		38140BA42CD80EF40052B242 /* OrangeButtons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrangeButtons.swift; sourceTree = "<group>"; };
 		38140BA82CD813FC0052B242 /* TaskVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskVC.swift; sourceTree = "<group>"; };
+		382E99FF2CE7361200BADCCB /* NotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationManager.swift; sourceTree = "<group>"; };
 		38593AC02CBD38DC0048B95C /* ToDoList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToDoList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		38593AC32CBD38DC0048B95C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		38593ACD2CBD38DC0048B95C /* ToDoList.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = ToDoList.xcdatamodel; sourceTree = "<group>"; };
@@ -90,6 +92,7 @@
 			children = (
 				38140B862CCB8B710052B242 /* APIManager.swift */,
 				38140B8C2CD4BE5B0052B242 /* CoreDataManager.swift */,
+				382E99FF2CE7361200BADCCB /* NotificationManager.swift */,
 			);
 			path = Manager;
 			sourceTree = "<group>";
@@ -320,6 +323,7 @@
 				38EFE9CE2CBFB08E00F6BED8 /* ToDoListCell.swift in Sources */,
 				38140B9F2CD50F9D0052B242 /* HomeCell.swift in Sources */,
 				38EFE9C02CBF9BF800F6BED8 /* TabBarViewController.swift in Sources */,
+				382E9A002CE7361200BADCCB /* NotificationManager.swift in Sources */,
 				38140B8F2CD4C3090052B242 /* CustomButton.swift in Sources */,
 				3809A9AE2CE48D170064D894 /* CalenderCell.swift in Sources */,
 				38140BA52CD80EF40052B242 /* OrangeButtons.swift in Sources */,

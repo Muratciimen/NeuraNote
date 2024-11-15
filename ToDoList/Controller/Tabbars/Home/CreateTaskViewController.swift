@@ -64,7 +64,19 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
         
         descriptionTextView.delegate = self
         saveButton.isEnabled = false
-         
+        
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            switch settings.authorizationStatus {
+            case .authorized:
+                print("Bildirim izni verildi.")
+            case .denied:
+                print("Bildirim izni reddedildi.")
+            case .notDetermined:
+                print("Bildirim izni henüz belirlenmedi.")
+            default:
+                print("Diğer durum: \(settings.authorizationStatus)")
+            }
+        }
     }
     
     private func loadTaskData() {
@@ -411,6 +423,7 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
         
         isTaskSaved = true
         
+       
         guard let taskDescription = descriptionTextView.text,
               !taskDescription.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
             print("Task description is empty.")
@@ -418,6 +431,7 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
             return
         }
 
+        
         let dueDateString = dueDateButton.titleLabel?.text?.trimmingCharacters(in: .whitespacesAndNewlines)
         guard let dueDateText = dueDateString, !dueDateText.contains("Select Date") else {
             print("Due date not selected.")
@@ -425,38 +439,56 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
             return
         }
 
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .none
-        guard let dueDate = formatter.date(from: dueDateText) else {
+        // Seçilen dueDate'i `Date` formatında alıyoruz
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateStyle = .medium
+        dateFormatter.timeStyle = .none
+        guard let dueDate = dateFormatter.date(from: dueDateText) else {
             print("Invalid due date format.")
             isTaskSaved = false
             return
         }
 
-        if isEditMode, let taskToEdit = taskToEdit {
-            category = taskToEdit.category
-        }
-
-        if !isEditMode, category == nil {
-            print("Category is missing.")
+        // Seçilen reminderTime'ı `Date` formatında alıyoruz
+        let reminderTimeString = reminderButton.titleLabel?.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        let timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "HH:mm"
+        guard let reminderTimeDate = timeFormatter.date(from: reminderTimeString) else {
+            print("Reminder time is invalid.")
             isTaskSaved = false
             return
         }
 
-        let reminderTimeString = reminderButton.titleLabel?.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        let timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "HH:mm"
-        let reminderTimeDate = timeFormatter.date(from: reminderTimeString)
+        // `dueDate` ve `reminderTimeDate`'i birleştirerek bildirim için tam tarih oluşturuyoruz
+        var notificationDateComponents = Calendar.current.dateComponents([.year, .month, .day], from: dueDate)
+        let reminderTimeComponents = Calendar.current.dateComponents([.hour, .minute], from: reminderTimeDate)
+        notificationDateComponents.hour = reminderTimeComponents.hour
+        notificationDateComponents.minute = reminderTimeComponents.minute
+
+        guard let notificationDate = Calendar.current.date(from: notificationDateComponents) else {
+            print("Could not create notification date.")
+            isTaskSaved = false
+            return
+        }
+
+        // Bildirim ID'si oluşturuyoruz
+        let notificationID = UUID().uuidString
 
         if isEditMode, let taskToEdit = taskToEdit {
             let success = CoreDataManager.shared.updateItem(
                 item: taskToEdit,
                 newName: taskDescription,
                 newDueDate: dueDate,
-                newReminderTime: reminderTimeDate
+                newReminderTime: notificationDate,
+                newNotificationID: notificationID
             )
             if success {
+                NotificationManager.shared.scheduleNotification(
+                    title: "Görev Güncellendi",
+                    body: taskDescription,
+                    date: notificationDate, // Bildirim tarihi yerel saat diliminde
+                    identifier: notificationID
+                )
                 print("Task successfully updated in CoreData.")
                 if let existingCategory = taskToEdit.category {
                     delegate?.didCreateTask(title: taskDescription, dueDate: dueDateText, reminderTime: reminderTimeString, category: existingCategory)
@@ -469,10 +501,17 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
             if let savedTask = CoreDataManager.shared.createItem(
                 name: taskDescription,
                 dueDate: dueDate,
-                reminderTime: reminderTimeDate,
+                reminderTime: notificationDate,
                 color: UIColor.systemBlue,
-                category: category!
+                category: category!,
+                notificationID: notificationID
             ) {
+                NotificationManager.shared.scheduleNotification(
+                    title: "Don't Forget to Complete Your Task",
+                    body: taskDescription,
+                    date: notificationDate,
+                    identifier: notificationID
+                )
                 print("Task successfully saved to CoreData.")
                 delegate?.didCreateTask(title: taskDescription, dueDate: dueDateText, reminderTime: reminderTimeString, category: category!)
             } else {
@@ -480,7 +519,13 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
                 isTaskSaved = false
             }
         }
-        
-        dismiss(animated: true, completion: nil)
+
+        if isTaskSaved {
+            dismiss(animated: true, completion: nil)
+        } else {
+            print("Task not saved. Dismiss aborted.")
+        }
     }
+
+
 }

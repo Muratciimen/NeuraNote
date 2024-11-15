@@ -241,7 +241,7 @@ class TaskDetail: UIViewController, CreateTaskViewControllerDelegate {
         view.addSubview(editButton)
         
         editButton.snp.makeConstraints { make in
-            make.top.equalTo(briefLabel.snp.bottom).offset(24)
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-24)
             make.left.equalTo(24)
             make.right.equalTo(-24)
             make.height.equalTo(56)
@@ -252,7 +252,6 @@ class TaskDetail: UIViewController, CreateTaskViewControllerDelegate {
     @objc private func editButtonTapped() {
         let createTaskVC = CreateTaskViewController()
         
-        // Düzenleme moduna geçiş için gerekli verilerin atanması
         createTaskVC.isEditMode = true
         createTaskVC.taskTitle = taskTitle
         createTaskVC.dueDate = dueDate
@@ -260,25 +259,26 @@ class TaskDetail: UIViewController, CreateTaskViewControllerDelegate {
         createTaskVC.descriptionText = descriptionText
         createTaskVC.taskToEdit = self.taskToEdit
         createTaskVC.category = category
-        
         createTaskVC.delegate = self
         
         createTaskVC.modalPresentationStyle = .pageSheet
         
         if let sheet = createTaskVC.sheetPresentationController {
-            // Ekran yüksekliğine göre detent ayarı
-            let screenHeight = UIScreen.main.bounds.height
-            if screenHeight < 700 { // iPhone SE gibi küçük ekranlar için
-                sheet.detents = [.large()]
-            } else {
-                sheet.detents = [.medium()]
-            }
-            sheet.prefersGrabberVisible = true
-            sheet.prefersScrollingExpandsWhenScrolledToEdge = false
-        }
-        
+             let screenHeight = UIScreen.main.bounds.height
+             if screenHeight < 700 {
+                 sheet.detents = [.custom(resolver: { context in
+                     screenHeight / 1.3
+                 })]
+             } else {                  sheet.detents = [.custom(resolver: { context in
+                     screenHeight / 1.8
+                 })]
+             }
+             sheet.prefersGrabberVisible = true
+             sheet.prefersScrollingExpandsWhenScrolledToEdge = false
+         }
         present(createTaskVC, animated: true, completion: nil)
     }
+    
     func configureNavigationBar() {
         navigationItem.title = ""
         navigationItem.hidesBackButton = true

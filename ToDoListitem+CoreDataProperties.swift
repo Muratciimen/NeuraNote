@@ -26,6 +26,7 @@ extension ToDoListitem {
     @NSManaged public var category: Kategori?
     @NSManaged public var reminderTime: Date?
     @NSManaged public var descriptionText: String?
+    @NSManaged public var notificationID: String?
 
 }
 

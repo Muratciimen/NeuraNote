@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3809A9A92CDDF6D80064D894 /* ReminderAndDateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3809A9A82CDDF6D80064D894 /* ReminderAndDateView.swift */; };
 		3809A9AC2CE47D960064D894 /* FSCalendar in Frameworks */ = {isa = PBXBuildFile; productRef = 3809A9AB2CE47D960064D894 /* FSCalendar */; };
 		3809A9AE2CE48D170064D894 /* CalenderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3809A9AD2CE48D170064D894 /* CalenderCell.swift */; };
 		38140B872CCB8B710052B242 /* APIManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38140B862CCB8B710052B242 /* APIManager.swift */; };
@@ -41,7 +40,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		3809A9A82CDDF6D80064D894 /* ReminderAndDateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReminderAndDateView.swift; sourceTree = "<group>"; };
 		3809A9AD2CE48D170064D894 /* CalenderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalenderCell.swift; sourceTree = "<group>"; };
 		38140B862CCB8B710052B242 /* APIManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManager.swift; sourceTree = "<group>"; };
 		38140B8C2CD4BE5B0052B242 /* CoreDataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataManager.swift; sourceTree = "<group>"; };
@@ -194,7 +192,6 @@
 				38140B982CD4E0960052B242 /* HeaderView.swift */,
 				38140B9C2CD4F8680052B242 /* ColorPickerCollectionView.swift */,
 				38140BA42CD80EF40052B242 /* OrangeButtons.swift */,
-				3809A9A82CDDF6D80064D894 /* ReminderAndDateView.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -307,7 +304,6 @@
 			files = (
 				38EFE9C82CBFA2E900F6BED8 /* Buttons.swift in Sources */,
 				38EFE9C52CBF9CB700F6BED8 /* SettingVC.swift in Sources */,
-				3809A9A92CDDF6D80064D894 /* ReminderAndDateView.swift in Sources */,
 				38140BA92CD813FC0052B242 /* TaskVC.swift in Sources */,
 				38140B8D2CD4BE5B0052B242 /* CoreDataManager.swift in Sources */,
 				38EFE9C32CBF9CA500F6BED8 /* HomeVC.swift in Sources */,

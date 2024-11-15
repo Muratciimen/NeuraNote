@@ -50,9 +50,9 @@ class CoreDataManager {
     }
     
     // MARK: - Delete Category
-    func deleteCategory(category: Kategori) -> Bool {
+    func deleteCategory(category: Kategori) {
         context.delete(category)
-        return saveContext()
+        saveContext()
     }
     
     // MARK: - Fetch All ToDoList Items

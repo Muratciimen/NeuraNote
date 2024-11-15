@@ -6,7 +6,7 @@
         <attribute name="createdDate" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" optional="YES" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="name" optional="YES" attributeType="String"/>
-        <relationship name="items" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ToDoListitem" inverseName="category" inverseEntity="ToDoListitem"/>
+        <relationship name="items" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ToDoListitem" inverseName="category" inverseEntity="ToDoListitem"/>
     </entity>
     <entity name="ToDoListitem" representedClassName="ToDoListitem" syncable="YES">
         <attribute name="brief" optional="YES" attributeType="String"/>

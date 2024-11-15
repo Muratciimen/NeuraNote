@@ -248,7 +248,7 @@ class TaskDetail: UIViewController, CreateTaskViewControllerDelegate {
         }
         
     }
-    
+
     @objc private func editButtonTapped() {
         let createTaskVC = CreateTaskViewController()
         
@@ -260,6 +260,7 @@ class TaskDetail: UIViewController, CreateTaskViewControllerDelegate {
         createTaskVC.taskToEdit = self.taskToEdit
         createTaskVC.category = category
         createTaskVC.delegate = self
+        createTaskVC.existingTasks = CoreDataManager.shared.fetchAllItems()
         
         createTaskVC.modalPresentationStyle = .pageSheet
         

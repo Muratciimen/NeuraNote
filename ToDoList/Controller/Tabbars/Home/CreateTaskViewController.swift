@@ -15,6 +15,7 @@ protocol CreateTaskViewControllerDelegate: AnyObject {
 
 class CreateTaskViewController: UIViewController, UITextViewDelegate {
     
+    var existingTasks: [ToDoListitem] = []
     var isEditMode: Bool = false
     var taskToEdit: ToDoListitem?
     var taskTitle: String?
@@ -22,6 +23,7 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
     var reminderTime: String?
     var descriptionText: String?
     var category: Kategori?
+    var saveButton = UIButton()
     let createTaskTitleLabel = UILabel()
     let dueDateLabel = UILabel()
     let dueDateIcon = UIImageView()
@@ -32,7 +34,6 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
     let descriptionLabel = UILabel()
     let descriptionIcon = UIImageView()
     let descriptionTextView = UITextView()
-    var saveButton = UIButton()
     let datePickerContainer = UIView()
     let datePicker = UIDatePicker()
     let reminderPickerContainer = UIView()
@@ -402,9 +403,11 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
     }
     
     private func checkIfSaveButtonShouldBeEnabled() {
+        let descriptionText = descriptionTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        
         if let dueDateText = dueDateButton.titleLabel?.text, !dueDateText.contains("Select Date"),
            let reminderText = reminderButton.titleLabel?.text, !reminderText.contains("Select Reminder"),
-           !descriptionTextView.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+           !descriptionText.isEmpty {
             saveButton.isEnabled = true
             saveButton.backgroundColor = UIColor(hex: "FFAF5F")
         } else {
@@ -414,6 +417,16 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
     
     // MARK: - Görev Kaydetme İşlemi
     @objc private func saveButtonTapped() {
+        
+        let descriptionText = descriptionTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        // Aynı açıklama kontrolü
+        if existingTasks.contains(where: { $0.name == descriptionText }) {
+            let alert = UIAlertController(title: "Duplicate Task", message: "A task with the same description already exists. Please enter a unique task.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+            present(alert, animated: true, completion: nil)
+            return
+        }
         print("Category in saveButtonTapped at start:", category?.name ?? "Category is nil")
 
         guard !isTaskSaved else {
@@ -459,7 +472,6 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
             return
         }
 
-        // `dueDate` ve `reminderTimeDate`'i birleştirerek bildirim için tam tarih oluşturuyoruz
         var notificationDateComponents = Calendar.current.dateComponents([.year, .month, .day], from: dueDate)
         let reminderTimeComponents = Calendar.current.dateComponents([.hour, .minute], from: reminderTimeDate)
         notificationDateComponents.hour = reminderTimeComponents.hour
@@ -471,7 +483,6 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
             return
         }
 
-        // Bildirim ID'si oluşturuyoruz
         let notificationID = UUID().uuidString
 
         if isEditMode, let taskToEdit = taskToEdit {
@@ -486,7 +497,7 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
                 NotificationManager.shared.scheduleNotification(
                     title: "Görev Güncellendi",
                     body: taskDescription,
-                    date: notificationDate, // Bildirim tarihi yerel saat diliminde
+                    date: notificationDate,
                     identifier: notificationID
                 )
                 print("Task successfully updated in CoreData.")
@@ -526,6 +537,4 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
             print("Task not saved. Dismiss aborted.")
         }
     }
-
-
 }

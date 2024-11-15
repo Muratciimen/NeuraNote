@@ -47,6 +47,9 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPressGesture(_:)))
         tableView.addGestureRecognizer(longPressGesture)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture))
+           view.addGestureRecognizer(tapGesture)
     }
 
     func setupUI() {
@@ -114,6 +117,12 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         }
 
         updateEmptyState()
+    }
+    
+    @objc func handleTapGesture(_ gesture: UITapGestureRecognizer) {
+        if tableView.isEditing {
+            tableView.setEditing(false, animated: true)
+        }
     }
     
     func loadTasks() {

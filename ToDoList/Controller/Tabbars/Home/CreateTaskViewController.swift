@@ -45,6 +45,10 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
     
     @objc var datePickerSelectButton = UIButton()
     @objc var reminderPickerSelectButton = UIButton()
+    
+    override func viewWillAppear(_ animated: Bool) {
+        checkIfSaveButtonShouldBeEnabled()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -420,7 +424,7 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
         
         let descriptionText = descriptionTextView.text.trimmingCharacters(in: .whitespacesAndNewlines)
         
-        // Aynı açıklama kontrolü
+        
         if existingTasks.contains(where: { $0.name == descriptionText }) {
             let alert = UIAlertController(title: "Duplicate Task", message: "A task with the same description already exists. Please enter a unique task.", preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))

@@ -68,8 +68,8 @@ extension UIButton {
         button.layer.cornerRadius = type.cornerRadius
         button.addTarget(target, action: action, for: .touchUpInside)
 
-            var configuration = UIButton.Configuration.borderless() // 1
-            configuration.cornerStyle = .capsule // 2
+            var configuration = UIButton.Configuration.borderless()
+            configuration.cornerStyle = .capsule
             configuration.baseBackgroundColor = type.backgroundColor
             configuration.buttonSize = .large
             configuration.imagePadding = 16

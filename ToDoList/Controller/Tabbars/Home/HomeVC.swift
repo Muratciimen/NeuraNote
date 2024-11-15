@@ -192,7 +192,6 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Crea
         }
     }
     
-    
     func didUpdateTaskCount() {
         fetchCategories()
     }

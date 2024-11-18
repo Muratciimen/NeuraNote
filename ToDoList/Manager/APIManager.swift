@@ -25,6 +25,7 @@ class APIManager {
                     "parts": [
                         [
                             "text": "Here’s your reminder: \(prompt). Provide a friendly and motivating suggestion to make this task easier, more enjoyable, or healthier. Share practical, activity-specific tips that are relevant and helpful. Don't forget to respond in the same language the user wrote in. Give the answer maximum 100 words."
+
                         ]
                     ]
                 ]

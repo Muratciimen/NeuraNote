@@ -36,13 +36,15 @@ class TaskDetail: UIViewController, CreateTaskViewControllerDelegate {
         super.viewWillAppear(animated)
 
         if let taskToEdit = taskToEdit {
-            print("DEBUG: Updating UI in viewWillAppear with task: \(taskToEdit.name ?? "No Name")")
-
-            titleLabel.text = taskToEdit.name
-            dateLabel.text = taskToEdit.dueDate != nil ? DateFormatter.localizedString(from: taskToEdit.dueDate!, dateStyle: .medium, timeStyle: .none) : "No Date Selected"
-            reminderSecondLabel.text = taskToEdit.reminderTime != nil ? formatTime(taskToEdit.reminderTime!) : "No Reminder Set"
-        } else {
-            print("DEBUG: taskToEdit is nil in viewWillAppear.")
+            DispatchQueue.main.async {
+                self.titleLabel.text = taskToEdit.name
+                self.dateLabel.text = taskToEdit.dueDate != nil
+                    ? DateFormatter.localizedString(from: taskToEdit.dueDate!, dateStyle: .medium, timeStyle: .none)
+                    : "No Date Selected"
+                self.reminderSecondLabel.text = taskToEdit.reminderTime != nil
+                    ? self.formatTime(taskToEdit.reminderTime!)
+                    : "No Reminder Set"
+            }
         }
     }
     
@@ -66,13 +68,16 @@ class TaskDetail: UIViewController, CreateTaskViewControllerDelegate {
         self.reminderTime = reminderTime
         self.category = category
 
-        titleLabel.text = title
-        dateLabel.text = dueDate
-        reminderSecondLabel.text = reminderTime
-        
-        print("DEBUG: Task updated with title: \(title), dueDate: \(dueDate), reminderTime: \(reminderTime)")
+        self.taskToEdit?.name = title
+        self.taskToEdit?.dueDate = DateFormatter().date(from: dueDate) // Tarih formatını kontrol edin
+        self.taskToEdit?.reminderTime = DateFormatter().date(from: reminderTime) // Saat formatını kontrol edin
+
+        DispatchQueue.main.async {
+            self.titleLabel.text = title
+            self.dateLabel.text = dueDate
+            self.reminderSecondLabel.text = reminderTime
+        }
     }
-    
     func fetchBrief() {
         
         guard let taskTitle = taskTitle else {

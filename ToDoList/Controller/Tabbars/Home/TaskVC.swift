@@ -185,6 +185,14 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if tableView.isEditing {
+            // Düzenleme modunu kapat
+            tableView.setEditing(false, animated: true)
+            tableView.deselectRow(at: indexPath, animated: true)
+            return
+        }
+
+        // Normal hücre tıklama işlemi
         let task = tasks[indexPath.row]
         let taskDetailVC = TaskDetail()
         
@@ -207,6 +215,31 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         navigationController?.pushViewController(taskDetailVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
+
+    
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        let task = tasks[indexPath.row]
+//        let taskDetailVC = TaskDetail()
+//        
+//        print("Category in didSelectRowAt:", task.category?.name ?? "Category is nil")
+//        
+//        taskDetailVC.taskTitle = task.name
+//        taskDetailVC.dueDate = task.dueDate != nil ? DateFormatter.localizedString(from: task.dueDate!, dateStyle: .medium, timeStyle: .none) : "No Date Selected"
+//
+//        if let reminderTime = task.reminderTime {
+//            let timeFormatter = DateFormatter()
+//            timeFormatter.dateFormat = "HH:mm"
+//            taskDetailVC.reminderTime = timeFormatter.string(from: reminderTime)
+//        } else {
+//            taskDetailVC.reminderTime = "No Reminder Set"
+//        }
+//
+//        taskDetailVC.category = task.category
+//        taskDetailVC.taskToEdit = task
+//        
+//        navigationController?.pushViewController(taskDetailVC, animated: true)
+//        tableView.deselectRow(at: indexPath, animated: true)
+//    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoListCell", for: indexPath) as? ToDoListCell else {
@@ -314,10 +347,11 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         createTaskVC.modalPresentationStyle = .pageSheet
         present(createTaskVC, animated: true, completion: nil)
     }
-    
+        
     func configureNavigationBar() {
         navigationItem.title = ""
         navigationItem.hidesBackButton = true
     }
+    
 }
 

@@ -184,32 +184,13 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Crea
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            // Silinecek kategoriyi al
             let categoryToDelete = categoryList[indexPath.row]
-
-            // Core Data'dan kategoriyi ve ilişkili görevleri sil (Cascade delete rule sayesinde otomatik olarak)
             coreDataManager.deleteCategory(category: categoryToDelete)
-
-            // categoryList'ten kategoriyi kaldır
             categoryList.remove(at: indexPath.row)
-
-            // Tabloyu güncelle
             tableView.deleteRows(at: [indexPath], with: .automatic)
-
-            // Boş ekran görünürlüğünü güncelle
             updateViewVisibility()
         }
     }
-
-//    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-//        if editingStyle == .delete {
-//            let categoryToDelete = categoryList[indexPath.row]
-//            coreDataManager.deleteCategory(category: categoryToDelete)
-//            categoryList.remove(at: indexPath.row)
-//            tableView.deleteRows(at: [indexPath], with: .automatic)
-//            updateViewVisibility()
-//        }
-//    }
     
     func didUpdateTaskCount() {
         fetchCategories()

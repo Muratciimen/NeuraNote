@@ -119,8 +119,7 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
     
     func loadTasks() {
         if let category = category {
-          
-            tasks = CoreDataManager.shared.fetchItems(byCategory: category).sorted(by: { $0.createdAt ?? Date() > $1.createdAt ?? Date() })
+            tasks = CoreDataManager.shared.fetchItems(byCategory: category).sorted(by: { $0.index < $1.index })
         } else {
             tasks = []
         }
@@ -185,14 +184,6 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if tableView.isEditing {
-            // Düzenleme modunu kapat
-            tableView.setEditing(false, animated: true)
-            tableView.deselectRow(at: indexPath, animated: true)
-            return
-        }
-
-        // Normal hücre tıklama işlemi
         let task = tasks[indexPath.row]
         let taskDetailVC = TaskDetail()
         
@@ -215,31 +206,6 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         navigationController?.pushViewController(taskDetailVC, animated: true)
         tableView.deselectRow(at: indexPath, animated: true)
     }
-
-    
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let task = tasks[indexPath.row]
-//        let taskDetailVC = TaskDetail()
-//        
-//        print("Category in didSelectRowAt:", task.category?.name ?? "Category is nil")
-//        
-//        taskDetailVC.taskTitle = task.name
-//        taskDetailVC.dueDate = task.dueDate != nil ? DateFormatter.localizedString(from: task.dueDate!, dateStyle: .medium, timeStyle: .none) : "No Date Selected"
-//
-//        if let reminderTime = task.reminderTime {
-//            let timeFormatter = DateFormatter()
-//            timeFormatter.dateFormat = "HH:mm"
-//            taskDetailVC.reminderTime = timeFormatter.string(from: reminderTime)
-//        } else {
-//            taskDetailVC.reminderTime = "No Reminder Set"
-//        }
-//
-//        taskDetailVC.category = task.category
-//        taskDetailVC.taskToEdit = task
-//        
-//        navigationController?.pushViewController(taskDetailVC, animated: true)
-//        tableView.deselectRow(at: indexPath, animated: true)
-//    }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoListCell", for: indexPath) as? ToDoListCell else {
@@ -303,14 +269,26 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
     }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        // 1. Görevi taşı
         let movedTask = tasks.remove(at: sourceIndexPath.row)
         tasks.insert(movedTask, at: destinationIndexPath.row)
-        
+
+        // 2. Yeni sıralamaya göre tüm `index` değerlerini güncelle
         for (index, task) in tasks.enumerated() {
             task.index = Int32(index)
         }
-        CoreDataManager.shared.saveContext()
+
+        // 3. Core Data'ya değişiklikleri kaydet
+        if CoreDataManager.shared.saveContext() {
+            print("Sıralama başarıyla kaydedildi.")
+        } else {
+            print("Hata: Sıralama Core Data'ya kaydedilemedi.")
+        }
+
+        // 4. TableView'i güncelle
+        tableView.reloadData()
     }
+
 
     @objc private func didTapBackButton() {
         navigationController?.popToRootViewController(animated: true)
@@ -354,4 +332,3 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
     }
     
 }
-

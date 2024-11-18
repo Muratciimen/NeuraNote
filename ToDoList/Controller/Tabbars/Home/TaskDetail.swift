@@ -37,16 +37,22 @@ class TaskDetail: UIViewController, CreateTaskViewControllerDelegate {
 
         if let taskToEdit = taskToEdit {
             DispatchQueue.main.async {
-                self.titleLabel.text = taskToEdit.name
-                self.dateLabel.text = taskToEdit.dueDate != nil
-                    ? DateFormatter.localizedString(from: taskToEdit.dueDate!, dateStyle: .medium, timeStyle: .none)
-                    : "No Date Selected"
-                self.reminderSecondLabel.text = taskToEdit.reminderTime != nil
-                    ? self.formatTime(taskToEdit.reminderTime!)
-                    : "No Reminder Set"
+                self.titleLabel.text = taskToEdit.name ?? "No Title"
+                if let dueDate = taskToEdit.dueDate {
+                    self.dateLabel.text = DateFormatter.localizedString(from: dueDate, dateStyle: .medium, timeStyle: .none)
+                } else {
+                    self.dateLabel.text = "No Date Selected"
+                }
+
+                if let reminderTime = taskToEdit.reminderTime {
+                    self.reminderSecondLabel.text = self.formatTime(reminderTime)
+                } else {
+                    self.reminderSecondLabel.text = "No Reminder Set"
+                }
             }
         }
     }
+
     
     
     override func viewDidLoad() {
@@ -68,16 +74,28 @@ class TaskDetail: UIViewController, CreateTaskViewControllerDelegate {
         self.reminderTime = reminderTime
         self.category = category
 
-        self.taskToEdit?.name = title
-        self.taskToEdit?.dueDate = DateFormatter().date(from: dueDate) // Tarih formatını kontrol edin
-        self.taskToEdit?.reminderTime = DateFormatter().date(from: reminderTime) // Saat formatını kontrol edin
+        if let taskToEdit = self.taskToEdit {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "dd-MM-yyyy"
+            let timeFormatter = DateFormatter()
+            timeFormatter.dateFormat = "HH:mm"
+            
+            taskToEdit.name = title
+            taskToEdit.dueDate = dateFormatter.date(from: dueDate)
+            taskToEdit.reminderTime = timeFormatter.date(from: reminderTime)
+        }
 
+      
         DispatchQueue.main.async {
             self.titleLabel.text = title
             self.dateLabel.text = dueDate
             self.reminderSecondLabel.text = reminderTime
         }
+
+        
+        CoreDataManager.shared.saveContext()
     }
+
     func fetchBrief() {
         
         guard let taskTitle = taskTitle else {

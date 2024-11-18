@@ -159,8 +159,6 @@ class CreateVC: UIViewController, UITextFieldDelegate {
         }
     }
 
-
-
     private func showAlert(message: String, completion: (() -> Void)? = nil) {
         let alert = UIAlertController(title: "Info", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default, handler: { _ in

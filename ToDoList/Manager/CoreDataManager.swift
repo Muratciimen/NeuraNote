@@ -104,15 +104,13 @@ class CoreDataManager {
     }
 
     // MARK: - Update ToDoList Item
-    func updateItem(item: ToDoListitem, newName: String, newDueDate: Date, newReminderTime: Date?, newNotificationID: String?) -> Bool {
+    func updateItem(item: ToDoListitem, newName: String, newDueDate: Date, newReminderTime: Date?, newNotificationID: String) -> Bool {
         item.name = newName
         item.dueDate = newDueDate
         item.reminderTime = newReminderTime
-        item.notificationID = newNotificationID // Bildirimin ID'sini güncelle
-        
-        return saveContext()
+        item.notificationID = newNotificationID // Bildirim ID'si güncelleniyor
+        return saveContext() // Değişiklikleri kaydet
     }
-    
     // MARK: - Delete ToDoList Item
     func deleteItem(item: ToDoListitem) -> Bool {
         context.delete(item)

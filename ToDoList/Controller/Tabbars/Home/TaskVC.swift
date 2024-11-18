@@ -9,7 +9,6 @@
 import UIKit
 import SnapKit
 
-
 protocol TaskVCDelegate: AnyObject {
     func didUpdateTaskCount()
 }
@@ -31,6 +30,7 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loadTasks()
+        tableView.reloadData()
     }
     
     override func viewDidLoad() {
@@ -48,8 +48,6 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPressGesture(_:)))
         tableView.addGestureRecognizer(longPressGesture)
         
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapGesture))
-           view.addGestureRecognizer(tapGesture)
     }
 
     func setupUI() {
@@ -119,12 +117,6 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         updateEmptyState()
     }
     
-    @objc func handleTapGesture(_ gesture: UITapGestureRecognizer) {
-        if tableView.isEditing {
-            tableView.setEditing(false, animated: true)
-        }
-    }
-    
     func loadTasks() {
         if let category = category {
           
@@ -147,6 +139,7 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         loadTasks()
         delegate?.didUpdateTaskCount()
         NotificationCenter.default.post(name: NSNotification.Name("TaskUpdated"), object: nil)
+        tableView.reloadData()
     }
     // MARK: - İlk Açılış Kontrolü ve Overlay Gösterimi
     
@@ -156,8 +149,7 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         if !isFirstLaunch {
             
             UserDefaults.standard.set(true, forKey: "isFirstLaunch")
-            
-           
+                       
             overlayImageView.image = UIImage(named: "tip")
             overlayImageView.contentMode = .scaleAspectFill
             overlayImageView.alpha = 0.0
@@ -167,14 +159,12 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
                 make.edges.equalToSuperview()
             }
             
-            
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
                 UIView.animate(withDuration: 0.5) {
                     self?.overlayImageView.alpha = 1.0
                 }
             }
             
-         
             let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissOverlay))
             overlayImageView.addGestureRecognizer(tapGesture)
         }
@@ -187,7 +177,6 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
             self.overlayImageView.removeFromSuperview()
         }
     }
-
 
     // MARK: - UITableView DataSource & Delegate Methods
     
@@ -325,7 +314,7 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         createTaskVC.modalPresentationStyle = .pageSheet
         present(createTaskVC, animated: true, completion: nil)
     }
-
+    
     func configureNavigationBar() {
         navigationItem.title = ""
         navigationItem.hidesBackButton = true

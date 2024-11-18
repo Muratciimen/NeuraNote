@@ -113,6 +113,5 @@ class ToDoListCell: UITableViewCell {
 
     
     @objc private func buttonTapped() {
-        buttonTappedAction?()
     }
 }

@@ -32,6 +32,21 @@ class TaskDetail: UIViewController, CreateTaskViewControllerDelegate {
     let apiManager = APIManager()
     var task: ToDoListitem?
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        if let taskToEdit = taskToEdit {
+            print("DEBUG: Updating UI in viewWillAppear with task: \(taskToEdit.name ?? "No Name")")
+
+            titleLabel.text = taskToEdit.name
+            dateLabel.text = taskToEdit.dueDate != nil ? DateFormatter.localizedString(from: taskToEdit.dueDate!, dateStyle: .medium, timeStyle: .none) : "No Date Selected"
+            reminderSecondLabel.text = taskToEdit.reminderTime != nil ? formatTime(taskToEdit.reminderTime!) : "No Reminder Set"
+        } else {
+            print("DEBUG: taskToEdit is nil in viewWillAppear.")
+        }
+    }
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -45,17 +60,17 @@ class TaskDetail: UIViewController, CreateTaskViewControllerDelegate {
         fetchBrief() 
     }
     
-    func didCreateTask(title: String, dueDate: String,reminderTime: String, category: Kategori) {
+    func didCreateTask(title: String, dueDate: String, reminderTime: String, category: Kategori) {
         self.taskTitle = title
         self.dueDate = dueDate
         self.reminderTime = reminderTime
         self.category = category
-        
-       
+
         titleLabel.text = title
         dateLabel.text = dueDate
         reminderSecondLabel.text = reminderTime
-        print("Task updated with title: \(title), dueDate: \(dueDate), category: \(category.name)")
+        
+        print("DEBUG: Task updated with title: \(title), dueDate: \(dueDate), reminderTime: \(reminderTime)")
     }
     
     func fetchBrief() {
@@ -246,7 +261,13 @@ class TaskDetail: UIViewController, CreateTaskViewControllerDelegate {
             make.right.equalTo(-24)
             make.height.equalTo(56)
         }
-        
+    }
+    
+    private func formatTime(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .none
+        formatter.timeStyle = .short
+        return formatter.string(from: date)
     }
 
     @objc private func editButtonTapped() {

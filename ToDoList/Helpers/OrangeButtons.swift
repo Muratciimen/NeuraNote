@@ -13,6 +13,7 @@ enum OrangeButtons {
     case save
     case selected
     case editTask
+    case `continue`
 
     var title: String {
         switch self {
@@ -20,6 +21,7 @@ enum OrangeButtons {
         case .save: return "Save"
         case .selected: return "Selected"
         case .editTask: return "Edit Task"
+        case .continue: return "Continue"
         }
     }
 

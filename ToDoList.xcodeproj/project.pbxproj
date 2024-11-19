@@ -27,6 +27,9 @@
 		387A8A5B2CDA4D44001063D2 /* Kategori+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387A8A592CDA4D44001063D2 /* Kategori+CoreDataClass.swift */; };
 		387A8A5C2CDA4D44001063D2 /* Kategori+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387A8A5A2CDA4D44001063D2 /* Kategori+CoreDataProperties.swift */; };
 		388A3E312CBE519A008348AA /* ToDoListitem+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 388A3E2F2CBE519A008348AA /* ToDoListitem+CoreDataClass.swift */; };
+		389D0C6D2CECC64400B97CCB /* SingleOnboardingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389D0C6C2CECC64400B97CCB /* SingleOnboardingVC.swift */; };
+		389D0C6F2CECC6B600B97CCB /* OnboardingVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389D0C6E2CECC6B600B97CCB /* OnboardingVC.swift */; };
+		389D0C712CECC6F100B97CCB /* Onboarding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 389D0C702CECC6F100B97CCB /* Onboarding.swift */; };
 		38EFE9BE2CBE998300F6BED8 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 38EFE9BD2CBE998300F6BED8 /* SnapKit */; };
 		38EFE9C02CBF9BF800F6BED8 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EFE9BF2CBF9BF800F6BED8 /* TabBarViewController.swift */; };
 		38EFE9C32CBF9CA500F6BED8 /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38EFE9C22CBF9CA500F6BED8 /* HomeVC.swift */; };
@@ -61,6 +64,9 @@
 		387A8A592CDA4D44001063D2 /* Kategori+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Kategori+CoreDataClass.swift"; sourceTree = "<group>"; };
 		387A8A5A2CDA4D44001063D2 /* Kategori+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Kategori+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		388A3E2F2CBE519A008348AA /* ToDoListitem+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ToDoListitem+CoreDataClass.swift"; path = "../../ToDoListitem+CoreDataClass.swift"; sourceTree = "<group>"; };
+		389D0C6C2CECC64400B97CCB /* SingleOnboardingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleOnboardingVC.swift; sourceTree = "<group>"; };
+		389D0C6E2CECC6B600B97CCB /* OnboardingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingVC.swift; sourceTree = "<group>"; };
+		389D0C702CECC6F100B97CCB /* Onboarding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Onboarding.swift; sourceTree = "<group>"; };
 		38EFE9BF2CBF9BF800F6BED8 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		38EFE9C22CBF9CA500F6BED8 /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
 		38EFE9C42CBF9CB700F6BED8 /* SettingVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingVC.swift; sourceTree = "<group>"; };
@@ -175,9 +181,20 @@
 			path = ToDoListitem;
 			sourceTree = "<group>";
 		};
+		389D0C6B2CECC61A00B97CCB /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				389D0C6C2CECC64400B97CCB /* SingleOnboardingVC.swift */,
+				389D0C6E2CECC6B600B97CCB /* OnboardingVC.swift */,
+				389D0C702CECC6F100B97CCB /* Onboarding.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
 		38EFE9C12CBF9C2400F6BED8 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				389D0C6B2CECC61A00B97CCB /* Onboarding */,
 				38140B952CD4D9090052B242 /* Splash */,
 				38EFE9DA2CC0FD1800F6BED8 /* Tabbars */,
 			);
@@ -302,6 +319,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				389D0C6F2CECC6B600B97CCB /* OnboardingVC.swift in Sources */,
 				38EFE9C82CBFA2E900F6BED8 /* Buttons.swift in Sources */,
 				38EFE9C52CBF9CB700F6BED8 /* SettingVC.swift in Sources */,
 				38140BA92CD813FC0052B242 /* TaskVC.swift in Sources */,
@@ -313,12 +331,14 @@
 				387A8A5C2CDA4D44001063D2 /* Kategori+CoreDataProperties.swift in Sources */,
 				388A3E312CBE519A008348AA /* ToDoListitem+CoreDataClass.swift in Sources */,
 				38F759042CDCB16300851053 /* TaskDetail.swift in Sources */,
+				389D0C712CECC6F100B97CCB /* Onboarding.swift in Sources */,
 				38140B972CD4D9E60052B242 /* CreateVC.swift in Sources */,
 				38140B9D2CD4F8680052B242 /* ColorPickerCollectionView.swift in Sources */,
 				38EFE9DC2CC0FF6C00F6BED8 /* ToDoListitem+CoreDataProperties.swift in Sources */,
 				38EFE9CE2CBFB08E00F6BED8 /* ToDoListCell.swift in Sources */,
 				38140B9F2CD50F9D0052B242 /* HomeCell.swift in Sources */,
 				38EFE9C02CBF9BF800F6BED8 /* TabBarViewController.swift in Sources */,
+				389D0C6D2CECC64400B97CCB /* SingleOnboardingVC.swift in Sources */,
 				382E9A002CE7361200BADCCB /* NotificationManager.swift in Sources */,
 				38140B8F2CD4C3090052B242 /* CustomButton.swift in Sources */,
 				3809A9AE2CE48D170064D894 /* CalenderCell.swift in Sources */,
@@ -464,6 +484,7 @@
 				DEVELOPMENT_TEAM = M43GRH6U3S;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ToDoList/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = NeuraNote;
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "We need your permission to track your activity across other companies' apps and websites. This will allow us to provide personalized content and ads tailored to your interests, ensuring a more relevant and engaging experience. Additionally, we use this data to continuously improve app performance and enhance your overall user experience.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
@@ -495,6 +516,7 @@
 				DEVELOPMENT_TEAM = M43GRH6U3S;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = ToDoList/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = NeuraNote;
 				INFOPLIST_KEY_NSUserTrackingUsageDescription = "We need your permission to track your activity across other companies' apps and websites. This will allow us to provide personalized content and ads tailored to your interests, ensuring a more relevant and engaging experience. Additionally, we use this data to continuously improve app performance and enhance your overall user experience.";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;

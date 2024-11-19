@@ -188,6 +188,7 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Crea
             coreDataManager.deleteCategory(category: categoryToDelete)
             categoryList.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
+            NotificationCenter.default.post(name: NSNotification.Name("CategoryDeleted"), object: nil)
             updateViewVisibility()
         }
     }

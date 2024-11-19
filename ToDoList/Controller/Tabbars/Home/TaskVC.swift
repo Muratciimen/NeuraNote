@@ -48,6 +48,10 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         let longPressGesture = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPressGesture(_:)))
         tableView.addGestureRecognizer(longPressGesture)
         
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTapOutsideTableView))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+        
     }
 
     func setupUI() {
@@ -132,6 +136,12 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         let isTaskListEmpty = tasks.isEmpty
         taskImageView.isHidden = !isTaskListEmpty
         taskEmptyLabel.isHidden = !isTaskListEmpty
+    }
+    
+    @objc private func handleTapOutsideTableView() {
+        if tableView.isEditing {
+            tableView.setEditing(false, animated: true)
+        }
     }
 
     func didCreateTask(title: String, dueDate: String, reminderTime: String, category: Kategori) {
@@ -330,5 +340,4 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
         navigationItem.title = ""
         navigationItem.hidesBackButton = true
     }
-    
 }

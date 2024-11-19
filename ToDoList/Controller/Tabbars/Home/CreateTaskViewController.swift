@@ -499,7 +499,7 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
             )
             if success {
                 NotificationManager.shared.scheduleNotification(
-                    title: "Görev Güncellendi",
+                    title: "Don't Forget to Complete Your Task",
                     body: taskDescription,
                     date: notificationDate,
                     identifier: notificationID

@@ -31,6 +31,7 @@ class CalenderVC: UIViewController, FSCalendarDelegate, FSCalendarDataSource, FS
         super.viewDidAppear(animated)
         loadTasks(for: calendarView.selectedDate ?? Date())
         tasksTableView.reloadData()
+        calendarView.reloadData()
     }
     
     override func viewDidLoad() {
@@ -43,9 +44,10 @@ class CalenderVC: UIViewController, FSCalendarDelegate, FSCalendarDataSource, FS
         if let title = taskTitle {
             titleLabel.text = title
         }
-
         dueDateLabel.text = dueDate
         reminderTimeLabel.text = reminderTime
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(handleCategoryDeleted), name: NSNotification.Name("CategoryDeleted"), object: nil)
     }
 
     func setupUI() {
@@ -85,7 +87,6 @@ class CalenderVC: UIViewController, FSCalendarDelegate, FSCalendarDataSource, FS
             make.right.equalToSuperview().offset(-16)
             make.height.equalTo(300)
         }
-        
         todayTitleLabel.text = "Today Task"
         todayTitleLabel.textAlignment = .left
         todayTitleLabel.textColor = UIColor(hex: "#484848")
@@ -195,6 +196,11 @@ class CalenderVC: UIViewController, FSCalendarDelegate, FSCalendarDataSource, FS
     }
         
     @objc func refreshCalendar() {
+        updateTaskDatesWithColors()
+        calendarView.reloadData()
+    }
+    
+    @objc func handleCategoryDeleted() {
         updateTaskDatesWithColors()
         calendarView.reloadData()
     }

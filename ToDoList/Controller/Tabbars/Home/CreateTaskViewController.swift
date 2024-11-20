@@ -77,9 +77,22 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
             case .denied:
                 print("Bildirim izni reddedildi.")
             case .notDetermined:
-                print("Bildirim izni henüz belirlenmedi.")
+                print("Bildirim izni henüz belirlenmedi. İzin isteniyor...")
+                self.requestNotificationPermission()
             default:
                 print("Diğer durum: \(settings.authorizationStatus)")
+            }
+        }
+    }
+    
+    func requestNotificationPermission() {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if let error = error {
+                print("Bildirim izni isteme sırasında hata: \(error.localizedDescription)")
+            } else if granted {
+                print("Bildirim izni verildi.")
+            } else {
+                print("Bildirim izni reddedildi.")
             }
         }
     }

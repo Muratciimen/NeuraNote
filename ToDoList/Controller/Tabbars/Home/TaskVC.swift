@@ -266,11 +266,12 @@ class TaskVC: UIViewController, UITableViewDataSource, UITableViewDelegate, Crea
             let isDeleted = CoreDataManager.shared.deleteItem(item: taskToDelete)
             
             if isDeleted {
+                
                 tasks.remove(at: indexPath.row)
                 tableView.deleteRows(at: [indexPath], with: .automatic)
                 
                 updateEmptyState()
-                
+
                 delegate?.didUpdateTaskCount()
             } else {
                 print("Error deleting task from Core Data")

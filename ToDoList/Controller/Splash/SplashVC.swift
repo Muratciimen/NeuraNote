@@ -78,8 +78,10 @@ class SplashVC: UIViewController {
     
     private func switchToTabBar() {
         guard let window = UIApplication.shared.windows.first else { return }
-        let tabBarVC = TabBarViewController()
-        window.rootViewController = tabBarVC
+
+        let tabbar = TabBarViewController()
+        let navigationController = UINavigationController(rootViewController: tabbar)
+        window.rootViewController = navigationController
         UIView.transition(with: window, duration: 0.5, options: .transitionCrossDissolve, animations: nil, completion: nil)
     }
 

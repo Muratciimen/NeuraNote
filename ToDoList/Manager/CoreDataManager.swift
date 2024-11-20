@@ -108,11 +108,17 @@ class CoreDataManager {
         item.name = newName
         item.dueDate = newDueDate
         item.reminderTime = newReminderTime
-        item.notificationID = newNotificationID // Bildirim ID'si güncelleniyor
-        return saveContext() // Değişiklikleri kaydet
+        item.notificationID = newNotificationID
+        return saveContext() 
     }
     // MARK: - Delete ToDoList Item
     func deleteItem(item: ToDoListitem) -> Bool {
+        
+        if let notificationID = item.notificationID {
+            NotificationManager.shared.cancelNotification(identifier: notificationID)
+        }
+        
+        
         context.delete(item)
         return saveContext()
     }
@@ -184,7 +190,6 @@ class CoreDataManager {
         do {
             let items = try context.fetch(fetchRequest)
             
-            // Eğer ilgili tarihte en az bir görev varsa, ilk görevin kategorisinin rengini döner
             if let firstItem = items.first,
                let colorData = firstItem.category?.color,
                let color = NSKeyedUnarchiver.unarchiveObject(with: colorData) as? UIColor {

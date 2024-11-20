@@ -32,6 +32,9 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Crea
         fetchCategories()
         
         NotificationCenter.default.addObserver(self, selector: #selector(reloadTableView), name: NSNotification.Name("TaskAdded"), object: nil)
+        
+        print("isUserInteractionEnabled:", view.isUserInteractionEnabled)
+        print("HomeVC yüklendi")
     }
 
     @objc func reloadTableView() {
@@ -51,7 +54,7 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Crea
             make.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).multipliedBy(0.1)
             make.left.equalTo(24)
         }
-
+        
         homeSecondTitleLabel.text = "Create Category"
         homeSecondTitleLabel.textAlignment = .left
         homeSecondTitleLabel.textColor = UIColor(hex: "#484848")

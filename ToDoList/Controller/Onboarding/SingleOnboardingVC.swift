@@ -12,10 +12,12 @@ class SingleOnboardingVC: UIViewController {
     
     var pageData: OnboardingPage?
     var pageIndex: Int?
+    var continueCallback: (() -> Void)?
     
     private let imageView = UIImageView()
     private let titleLabel = UILabel()
     private let descriptionLabel = UILabel()
+    private let continueButton = UIButton()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,24 +29,34 @@ class SingleOnboardingVC: UIViewController {
         guard let pageData = pageData else { return }
         
         imageView.image = UIImage(named: pageData.imageName)
-        titleLabel.text = pageData.title
-        descriptionLabel.text = pageData.description
+        imageView.contentMode = .scaleAspectFill
+        imageView.clipsToBounds = true
         
+        titleLabel.text = pageData.title
+        titleLabel.textColor = UIColor(hex: "484848")
         titleLabel.font = UIFont.boldSystemFont(ofSize: 24)
         titleLabel.textAlignment = .center
         
+        descriptionLabel.text = pageData.description
+        descriptionLabel.textColor = UIColor(hex: "484848")
         descriptionLabel.font = UIFont.systemFont(ofSize: 16)
         descriptionLabel.textAlignment = .center
         descriptionLabel.numberOfLines = 0
         
+        continueButton.setTitle("Continue", for: .normal)
+        continueButton.backgroundColor = UIColor(hex: "FFAF5F")
+        continueButton.layer.cornerRadius = 8
+        continueButton.setTitleColor(.white, for: .normal)
+        continueButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        continueButton.addTarget(self, action: #selector(continueButtonTapped), for: .touchUpInside)
+        
         view.addSubview(imageView)
         view.addSubview(titleLabel)
         view.addSubview(descriptionLabel)
+        view.addSubview(continueButton)
         
         imageView.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(40)
-            make.centerX.equalToSuperview()
-            make.width.height.equalTo(200)
+            make.edges.equalToSuperview()
         }
         
         titleLabel.snp.makeConstraints { make in
@@ -58,5 +70,16 @@ class SingleOnboardingVC: UIViewController {
             make.centerX.equalToSuperview()
             make.leading.trailing.equalToSuperview().inset(20)
         }
+        
+        continueButton.snp.makeConstraints { make in
+            make.bottom.equalTo(view.safeAreaLayoutGuide.snp.bottom).offset(-20)
+            make.leading.equalToSuperview().offset(24)
+            make.trailing.equalToSuperview().offset(-24)
+            make.height.equalTo(56)
+        }
+    }
+    
+    @objc private func continueButtonTapped() {
+        continueCallback?() 
     }
 }

@@ -30,13 +30,10 @@ class NotificationManager {
         content.body = body
         content.sound = .default
         
-        // Date'i cihazın yerel saat dilimine göre bileşenlerine ayırma
         let triggerDateComponents = Calendar.current.dateComponents(in: TimeZone.current, from: date)
         
-        // Log ile kontrol amaçlı bileşenleri gösteriyoruz
         print("Bildirim planlanan tarih (yerel): \(triggerDateComponents)")
 
-        // UNCalendarNotificationTrigger ile bildirimi oluşturma
         let trigger = UNCalendarNotificationTrigger(dateMatching: triggerDateComponents, repeats: false)
         let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
         

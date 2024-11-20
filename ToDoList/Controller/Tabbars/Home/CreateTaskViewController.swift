@@ -536,6 +536,7 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
         }
 
         if isTaskSaved {
+            NotificationCenter.default.post(name: NSNotification.Name("TaskUpdated"), object: nil)
             dismiss(animated: true, completion: nil)
         } else {
             print("Task not saved. Dismiss aborted.")

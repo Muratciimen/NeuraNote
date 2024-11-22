@@ -34,20 +34,22 @@ class SingleOnboardingVC: UIViewController {
         
         titleLabel.text = pageData.title
         titleLabel.textColor = UIColor(hex: "484848")
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 24)
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
         titleLabel.textAlignment = .center
         
         descriptionLabel.text = pageData.description
-        descriptionLabel.textColor = UIColor(hex: "484848")
-        descriptionLabel.font = UIFont.systemFont(ofSize: 16)
+        descriptionLabel.textColor = UIColor(hex: "767676")
+        descriptionLabel.numberOfLines = 3
+        descriptionLabel.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         descriptionLabel.textAlignment = .center
-        descriptionLabel.numberOfLines = 0
+//        descriptionLabel.adjustsFontSizeToFitWidth = true
+//        descriptionLabel.minimumScaleFactor = 0.7
         
         continueButton.setTitle("Continue", for: .normal)
         continueButton.backgroundColor = UIColor(hex: "FFAF5F")
-        continueButton.layer.cornerRadius = 8
+        continueButton.layer.cornerRadius = 15
         continueButton.setTitleColor(.white, for: .normal)
-        continueButton.titleLabel?.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        continueButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         continueButton.addTarget(self, action: #selector(continueButtonTapped), for: .touchUpInside)
         
         view.addSubview(imageView)
@@ -60,15 +62,15 @@ class SingleOnboardingVC: UIViewController {
         }
         
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).multipliedBy(0.7)
+            make.top.equalTo(view.safeAreaLayoutGuide.snp.bottom).multipliedBy(0.720)
             make.centerX.equalToSuperview()
             make.leading.trailing.equalToSuperview().inset(20)
         }
         
         descriptionLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(20)
+            make.top.equalTo(titleLabel.snp.bottom).offset(16)
             make.centerX.equalToSuperview()
-            make.leading.trailing.equalToSuperview().inset(20)
+            make.leading.trailing.equalToSuperview().inset(47)
         }
         
         continueButton.snp.makeConstraints { make in

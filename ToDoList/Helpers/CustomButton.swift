@@ -45,6 +45,7 @@ class CustomButton: UIButton {
         plusLabel.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
+        
     }
     
     override func layoutSubviews() {
@@ -54,3 +55,26 @@ class CustomButton: UIButton {
     }
 }
 
+//let screenWidth = UIScreen.main.bounds.width
+//let plusIcon = UIImageView()
+//plusIcon.image = UIImage(named: "plus1")
+//self.addSubview(plusIcon)
+//
+//plusIcon.snp.makeConstraints { make in
+//    make.top.equalToSuperview().offset(16)
+//    make.left.equalToSuperview().offset(screenWidth * 0.3)
+//    make.height.equalTo(28)
+//    make.width.equalTo(28)
+//}
+//
+//let addList = UILabel()
+//addList.text = "Add List"
+//addList.textColor = UIColor(red: 0.98, green: 0.68, blue: 0.4, alpha: 1.0)
+//addList.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+//
+//self.addSubview(addList)
+//addList.snp.makeConstraints { make in
+//    make.top.equalTo(20)
+//    make.left.equalTo(plusIcon.snp.right).offset(4)
+//}
+//}

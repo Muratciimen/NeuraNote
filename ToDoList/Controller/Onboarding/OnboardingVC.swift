@@ -11,9 +11,11 @@ import SnapKit
 class OnboardingVC: UIPageViewController, UIPageViewControllerDataSource, UIPageViewControllerDelegate {
     
     let pages: [OnboardingPage] = [
-        OnboardingPage(title: "Welcome", description: "Discover the app's features!", imageName: "Onboarding"),
-        OnboardingPage(title: "Track", description: "Keep track of your progress.", imageName: "Onboarding"),
-        OnboardingPage(title: "Achieve", description: "Achieve your goals effortlessly.", imageName: "Onboarding")
+        OnboardingPage(title: "Plan. Prioritize. Succeed!", description: "With AI-powered task management, easily plan your day, set priorities, and stay on top of your goals.", imageName: "onboarding1"),
+        
+        OnboardingPage(title: "Find Your Perfect Rhythm", description: "Personalized to-do lists and smart suggestions tailored to your needs—boost your productivity effortlessly.", imageName: "onboarding2"),
+        
+        OnboardingPage(title: "Less Stress, More Productivity!", description: "Let AI help you organize your tasks and achieve more with less effort. Stay ahead, every day!", imageName: "onboarding3")
     ]
     
     var currentIndex: Int = 0
@@ -84,5 +86,13 @@ class OnboardingVC: UIPageViewController, UIPageViewControllerDataSource, UIPage
         guard let onboardingVC = viewController as? SingleOnboardingVC,
               let index = onboardingVC.pageIndex else { return nil }
         return createPageViewController(for: index + 1)
+    }
+    
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        if completed,
+           let visibleVC = viewControllers?.first as? SingleOnboardingVC,
+           let index = visibleVC.pageIndex {
+            currentIndex = index
+        }
     }
 }

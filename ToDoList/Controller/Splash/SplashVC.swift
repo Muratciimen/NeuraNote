@@ -12,7 +12,7 @@ class SplashVC: UIViewController {
 
     let appIconImageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "appIcon")
+        imageView.image = UIImage(named: "k")
         imageView.layer.cornerRadius = 12
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFit
@@ -21,7 +21,7 @@ class SplashVC: UIViewController {
     
     let loadingBar: UIProgressView = {
         let progressBar = UIProgressView(progressViewStyle: .default)
-        progressBar.progressTintColor = UIColor(hex: "#FFAF5F")
+        progressBar.progressTintColor = UIColor(hex: "#FFE2C6")
         progressBar.trackTintColor = UIColor.lightGray
         progressBar.setProgress(0.0, animated: true)
         return progressBar

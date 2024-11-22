@@ -55,7 +55,7 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Crea
             make.left.equalTo(24)
         }
         
-        homeSecondTitleLabel.text = "Create Category"
+        homeSecondTitleLabel.text = "Create To Do List"
         homeSecondTitleLabel.textAlignment = .left
         homeSecondTitleLabel.textColor = UIColor(hex: "#484848")
         homeSecondTitleLabel.font = UIFont.systemFont(ofSize: 14, weight: .light)

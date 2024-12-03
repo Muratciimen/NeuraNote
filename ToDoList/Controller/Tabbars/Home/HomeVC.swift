@@ -8,6 +8,8 @@
 import UIKit
 import SnapKit
 import CoreData
+import AppTrackingTransparency
+import AdSupport
 
 class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, CreateVCDelegate, TaskVCDelegate {
 
@@ -35,6 +37,7 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Crea
         
         print("isUserInteractionEnabled:", view.isUserInteractionEnabled)
         print("HomeVC yüklendi")
+        requestTrackingPermission()
     }
 
     @objc func reloadTableView() {
@@ -198,5 +201,24 @@ class HomeVC: UIViewController, UITableViewDelegate, UITableViewDataSource, Crea
     
     func didUpdateTaskCount() {
         fetchCategories()
+    }
+    
+    func requestTrackingPermission() {
+        if #available(iOS 14, *) {
+            ATTrackingManager.requestTrackingAuthorization { status in
+                switch status {
+                case .authorized:
+                    print("Tracking authorized")
+                case .denied:
+                    print("Tracking denied")
+                case .notDetermined:
+                    print("Tracking not determined")
+                case .restricted:
+                    print("Tracking restricted")
+                @unknown default:
+                    print("Unknown tracking status")
+                }
+            }
+        }
     }
 }

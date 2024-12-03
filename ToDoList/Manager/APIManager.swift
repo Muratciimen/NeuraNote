@@ -9,7 +9,7 @@ import Foundation
 
 class APIManager {
 
-    private let apiKey = "AIzaSyAhWfbg7zpjT7PgNtIqss6V4Fjnzl2JjsQ"
+    private let apiKey = "AIzaSyCTwiNXPy4t8ofTly8DaKaDo-4cPjC7yv8"
 
     func fetchGeminiContent(prompt: String, completion: @escaping (Result<String, Error>) -> Void) {
         

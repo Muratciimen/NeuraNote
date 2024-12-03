@@ -13,7 +13,7 @@ protocol CreateTaskViewControllerDelegate: AnyObject {
     func didCreateTask(title: String, dueDate: String, reminderTime: String, category: Kategori)
 }
 
-class CreateTaskViewController: UIViewController, UITextViewDelegate {
+class CreateTaskViewController: UIViewController {
     
     var existingTasks: [ToDoListitem] = []
     var isEditMode: Bool = false
@@ -243,6 +243,16 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
         descriptionTextView.layer.cornerRadius = 12
         descriptionTextView.font = UIFont.systemFont(ofSize: 16, weight: .regular)
         descriptionTextView.textColor = UIColor(hex: "797979")
+        
+        
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        let flexible = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
+        let doneButton = UIBarButtonItem(title: "Done", style: .done, target: self, action: #selector(doneButtonTapped))
+        toolbar.setItems([flexible, doneButton], animated: false)
+        
+        descriptionTextView.inputAccessoryView = toolbar
+        
         view.addSubview(descriptionTextView)
         
         descriptionTextView.snp.makeConstraints { make in
@@ -355,6 +365,10 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
     @objc private func datePickerChanged(_ sender: UIDatePicker) {
        
         updateReminderMinimumTime(for: sender.date)
+    }
+    
+    @objc func doneButtonTapped() {
+        descriptionTextView.resignFirstResponder()
     }
 
     private func updateReminderMinimumTime(for selectedDate: Date) {
@@ -555,4 +569,8 @@ class CreateTaskViewController: UIViewController, UITextViewDelegate {
             print("Task not saved. Dismiss aborted.")
         }
     }
+}
+
+extension CreateTaskViewController: UITextViewDelegate {
+    
 }

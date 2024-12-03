@@ -52,7 +52,6 @@ class SettingVC: UIViewController {
     func configureButtons() {
         let buttonVC = CustomButtonVC()
         
-      
         buttonVC.configureButton(
             in: stackView,
             title: "Rate Us",
@@ -60,7 +59,7 @@ class SettingVC: UIViewController {
             backgroundColor: UIColor(hex: "#F9F9F9"),
             font: UIFont.systemFont(ofSize: 17),
             dynamicImageName: "Style4",
-            urlString: "https://www.example.com/rate"
+            urlString: "itms-apps://itunes.apple.com/app/id6738386653"
         )
         
         buttonVC.configureButton(
@@ -72,7 +71,6 @@ class SettingVC: UIViewController {
             dynamicImageName: "ShieldCheck",
             urlString: "https://sites.google.com/view/neura-note/ana-sayfa"
         )
-        
         
         buttonVC.configureButton(
             in: stackView,

@@ -7,6 +7,7 @@
 
 import UIKit
 import CoreData
+import IQKeyboardManagerSwift
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -20,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let navigationController = UINavigationController(rootViewController: tabbar)
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
-        
+        IQKeyboardManager.shared.isEnabled = true
         return true
     }
 
